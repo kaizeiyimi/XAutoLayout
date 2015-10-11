@@ -1,6 +1,14 @@
+//
+//  XAutoLayout
+//
+//  Created by kaizei on 15/10/11.
+//  Copyright © 2015年 kaizeiyimi. All rights reserved.
+//
+
 
 import UIKit
 
+/// defines the relations that first item can make.
 public protocol _RelationMakeable: AttributeContainer {
     func equal(other: AttributeContainer) -> NSLayoutConstraint
     func lessOrEqual(other: AttributeContainer) -> NSLayoutConstraint
@@ -29,10 +37,12 @@ infix operator =/ {}
 infix operator <=/ {}
 infix operator >=/ {}
 
+// use *left* and *right* to make constraint.
 public func =/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutConstraint { return left.equal(right) }
 public func <=/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutConstraint { return left.lessOrEqual(right) }
 public func >=/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutConstraint { return left.greaterOrEqual(right) }
 
+/// **zip** *left* array and *right* array to make constraints.
 public func =/(left: [RelationMakeable], right: [RelationMakeable]) -> [NSLayoutConstraint] { return compositeEqual(left, right.map{$0 as AttributeContainer}) }
 public func =/(left: [RelationMakeable], right: [AttributeContainer?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
 
@@ -64,6 +74,7 @@ public enum Direction {
         
 }
 
+/// make constraints. *direction* and *autoActive* can be specified to adjust constraints.
 public func xmakeConstraints(direction: Direction = .LeadingToTrailing, autoActive: Bool = true, _ construction: ()->Void) -> [NSLayoutConstraint] {
     Context.stack.append(Context(direction: direction, autoActive: autoActive))
     construction()

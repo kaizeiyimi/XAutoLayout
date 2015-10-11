@@ -1,3 +1,10 @@
+//
+//  XAutoLayout
+//
+//  Created by kaizei on 15/10/11.
+//  Copyright © 2015年 kaizeiyimi. All rights reserved.
+//
+
 
 import UIKit
 

@@ -1,11 +1,23 @@
+//
+//  XAutoLayout
+//
+//  Created by kaizei on 15/10/11.
+//  Copyright © 2015年 kaizeiyimi. All rights reserved.
+//
+
 
 import UIKit
 
+/// x attribute container protocol
 public protocol _AttributeContainer {
+    /// change the **constant** of result constraint.
     func c(c: CGFloat) -> XAttributeX
+    /// change the **multiplier** of result constraint.
     func m(m: CGFloat) -> XAttributeX
+    /// change the **priority** of result constraint.
     func p(p: UILayoutPriority) -> XAttributeX
     
+    /// generate **XAttributeX** to construct constraint.
     func generateX() -> XAttributeX
 }
 
@@ -54,6 +66,7 @@ public struct XAttributeX: AttributeContainer {
         self.priority = priority
     }
     
+    /// init with other **XAttributeX** variable. additional property will be used if provided.
     public init(other: XAttributeX, item: AnyObject? = nil, attr: NSLayoutAttribute? = nil, constant: CGFloat? = nil, multiplier: CGFloat? = nil, priority: UILayoutPriority? = nil) {
         self.item = item ?? other.item
         self.attr = attr ?? other.attr

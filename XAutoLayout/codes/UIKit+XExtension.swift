@@ -1,3 +1,10 @@
+//
+//  XAutoLayout
+//
+//  Created by kaizei on 15/10/11.
+//  Copyright © 2015年 kaizeiyimi. All rights reserved.
+//
+
 
 import UIKit
 
@@ -56,14 +63,24 @@ extension NSLayoutAnchor: RelationMakeable {
 
 
 extension UIView {
+    
+    /// provide **[xWidth, xHeight]** array.
     public var xSize: [RelationMakeable] {
         return [XAttribute(item: self, attr: .Width), XAttribute(item: self, attr: .Height)]
     }
     
+    /// provide **[xCenterX, xCenterY]** array.
     public var xCenter: [RelationMakeable] {
         return [XAttribute(item: self, attr: .CenterX), XAttribute(item: self, attr: .CenterY)]
     }
     
+    /// provide **[xCenterXWithinMargins, xCenterYWithinMargins]** array.
+    @available(iOS 8.0, *)
+    public var xCenterWithinMargins: [RelationMakeable] {
+        return [XAttribute(item: self, attr: .CenterXWithinMargins), XAttribute(item: self, attr: .CenterYWithinMargins)]
+    }
+    
+    /// provide **[xTop, xLeading, xBottom, xRight]** array.
     public var xEdge: [RelationMakeable] {
         return [XAttribute(item: self, attr: .Top), XAttribute(item: self, attr: .Leading), XAttribute(item: self, attr: .Bottom), XAttribute(item: self, attr: .Trailing)]
     }
