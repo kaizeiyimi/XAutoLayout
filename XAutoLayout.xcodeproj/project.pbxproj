@@ -8,10 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		F6A6428E1BCA06F300A670E9 /* XAutoLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = F6A6428D1BCA06F300A670E9 /* XAutoLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F6A6429A1BCA074D00A670E9 /* ConstraintGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A642961BCA074D00A670E9 /* ConstraintGeneration.swift */; settings = {ASSET_TAGS = (); }; };
-		F6A6429B1BCA074D00A670E9 /* Number+XExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A642971BCA074D00A670E9 /* Number+XExtension.swift */; settings = {ASSET_TAGS = (); }; };
-		F6A6429C1BCA074D00A670E9 /* UIKit+XExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A642981BCA074D00A670E9 /* UIKit+XExtension.swift */; settings = {ASSET_TAGS = (); }; };
-		F6A6429D1BCA074D00A670E9 /* XAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A642991BCA074D00A670E9 /* XAttribute.swift */; settings = {ASSET_TAGS = (); }; };
+		F6A6429A1BCA074D00A670E9 /* ConstraintGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A642961BCA074D00A670E9 /* ConstraintGeneration.swift */; };
+		F6A6429B1BCA074D00A670E9 /* Number+XExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A642971BCA074D00A670E9 /* Number+XExtension.swift */; };
+		F6A6429C1BCA074D00A670E9 /* UIKit+XExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A642981BCA074D00A670E9 /* UIKit+XExtension.swift */; };
+		F6A6429D1BCA074D00A670E9 /* XAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A642991BCA074D00A670E9 /* XAttribute.swift */; };
+		F6FC6DD51C3E64BC00FF8DB4 /* XAutoLayout.podspec in Resources */ = {isa = PBXBuildFile; fileRef = F6FC6DD41C3E64BC00FF8DB4 /* XAutoLayout.podspec */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		F6A642981BCA074D00A670E9 /* UIKit+XExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIKit+XExtension.swift"; sourceTree = "<group>"; };
 		F6A642991BCA074D00A670E9 /* XAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XAttribute.swift; sourceTree = "<group>"; };
 		F6FABAE11BCA1CF60083F9E2 /* playground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = playground.playground; sourceTree = "<group>"; };
+		F6FC6DD41C3E64BC00FF8DB4 /* XAutoLayout.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = XAutoLayout.podspec; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				F6A642951BCA074D00A670E9 /* codes */,
 				F6A6428D1BCA06F300A670E9 /* XAutoLayout.h */,
 				F6A6428F1BCA06F300A670E9 /* Info.plist */,
+				F6FC6DD41C3E64BC00FF8DB4 /* XAutoLayout.podspec */,
 			);
 			path = XAutoLayout;
 			sourceTree = "<group>";
@@ -142,6 +145,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6FC6DD51C3E64BC00FF8DB4 /* XAutoLayout.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

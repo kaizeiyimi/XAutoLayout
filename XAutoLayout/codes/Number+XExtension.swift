@@ -26,36 +26,12 @@ extension Double: AttributeContainer {}
 
 extension SignedNumberType {
     public func generateX() -> XAttributeX {
-        return XAttributeX(item: nil, attr: .NotAnAttribute, constant: CGFloat(any: self))
+        return XAttributeX(item: nil, attr: .NotAnAttribute, constant: CGFloat(("\(self)" as NSString).doubleValue))
     }
 }
 
 extension UnsignedIntegerType {
     public func generateX() -> XAttributeX {
-        return XAttributeX(item: nil, attr: .NotAnAttribute, constant: CGFloat(any: self))
-    }
-}
-
-extension CGFloat {
-    private init(any value: Any) {
-        switch value {
-        case let v as Int: self = CGFloat(v)
-        case let v as Int8: self = CGFloat(v)
-        case let v as Int16: self = CGFloat(v)
-        case let v as Int32: self = CGFloat(v)
-        case let v as Int64: self = CGFloat(v)
-            
-        case let v as UInt: self = CGFloat(v)
-        case let v as UInt8: self = CGFloat(v)
-        case let v as UInt16: self = CGFloat(v)
-        case let v as UInt32: self = CGFloat(v)
-        case let v as UInt64: self = CGFloat(v)
-            
-        case let v as Float: self = CGFloat(v)
-        case let v as CGFloat: self = v
-        case let v as Double: self = CGFloat(v)
-        default:
-            fatalError("'value' is not convertable to 'CGFloat'")
-        }
+        return XAttributeX(item: nil, attr: .NotAnAttribute, constant: CGFloat(("\(self)" as NSString).doubleValue))
     }
 }

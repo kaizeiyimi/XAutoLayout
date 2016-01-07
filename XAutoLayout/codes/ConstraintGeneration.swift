@@ -44,6 +44,7 @@ public func >=/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutCo
 
 /// **zip** *left* array and *right* array to make constraints.
 public func =/(left: [RelationMakeable], right: [RelationMakeable]) -> [NSLayoutConstraint] { return compositeEqual(left, right.map{$0 as AttributeContainer}) }
+public func =/(left: [RelationMakeable], right: [AttributeContainer]) -> [NSLayoutConstraint] { return compositeEqual(left, right.map{$0 as AttributeContainer}) }
 public func =/(left: [RelationMakeable], right: [AttributeContainer?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
 
 public func compositeEqual(left: [RelationMakeable], _ right: [AttributeContainer?]) -> [NSLayoutConstraint] {
