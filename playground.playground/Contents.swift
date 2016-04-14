@@ -1,5 +1,5 @@
-//: Playground - noun: a place where people can play
-
+////: Playground - noun: a place where people can play
+//
 import UIKit
 import XAutoLayout
 
@@ -22,9 +22,11 @@ view.addSubview(v2)
 
 NSLayoutConstraint.activateConstraints( v1.xEdge =/ [10,5,-10,-20] )
 xmakeConstraints(.RightToLeft) {
-    //    v1.xEdge =/ [10,5,-10,-20]
-    v2.xSize =/ [50, view.xHeight.c(-80)]
+//        v1.xEdge =/ [10,5,-10,-20]
+    v2.xSize =/ [50, view.heightAnchor.c(-50)]
     [v2.xTop, v2.xLeading] =/ [20, 10]
 }
 
 view
+
+"test"

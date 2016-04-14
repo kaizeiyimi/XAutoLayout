@@ -36,7 +36,7 @@ public extension AttributeContainer {
 }
 
 
-public struct XAttribute: AttributeContainer {
+public final class XAttribute: AttributeContainer {
     let item: AnyObject
     let attr: NSLayoutAttribute
     
@@ -50,7 +50,7 @@ public struct XAttribute: AttributeContainer {
     }
 }
 
-public struct XAttributeX: AttributeContainer {
+public final class XAttributeX: AttributeContainer {
     let item: AnyObject?
     let attr: NSLayoutAttribute
     

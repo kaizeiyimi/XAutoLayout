@@ -43,9 +43,22 @@ public func <=/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutCo
 public func >=/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutConstraint { return left.greaterOrEqual(right) }
 
 /// **zip** *left* array and *right* array to make constraints.
-public func =/(left: [RelationMakeable], right: [RelationMakeable]) -> [NSLayoutConstraint] { return compositeEqual(left, right.map{$0 as AttributeContainer}) }
-public func =/(left: [RelationMakeable], right: [AttributeContainer]) -> [NSLayoutConstraint] { return compositeEqual(left, right.map{$0 as AttributeContainer}) }
+public func =/(left: [RelationMakeable], right: [RelationMakeable]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+public func =/(left: [RelationMakeable], right: [RelationMakeable?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+public func =/(left: [RelationMakeable], right: [AttributeContainer]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
 public func =/(left: [RelationMakeable], right: [AttributeContainer?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+
+public func compositeEqual(left: [RelationMakeable], _ right: [RelationMakeable]) -> [NSLayoutConstraint] {
+    return compositeEqual(left, right.map{$0 as AttributeContainer?})
+}
+
+public func compositeEqual(left: [RelationMakeable], _ right: [RelationMakeable?]) -> [NSLayoutConstraint] {
+    return compositeEqual(left, right.map{$0 as AttributeContainer?})
+}
+
+public func compositeEqual(left: [RelationMakeable], _ right: [AttributeContainer]) -> [NSLayoutConstraint] {
+    return compositeEqual(left, right.map{$0 as AttributeContainer?})
+}
 
 public func compositeEqual(left: [RelationMakeable], _ right: [AttributeContainer?]) -> [NSLayoutConstraint] {
     return zip(left, right).filter{ $0.1 != nil }.map { $0.0.equal($0.1!) }
