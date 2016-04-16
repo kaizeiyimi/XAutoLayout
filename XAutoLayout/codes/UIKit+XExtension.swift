@@ -66,22 +66,28 @@ extension UIView {
     
     /// provide **[xWidth, xHeight]** array.
     public var xSize: [RelationMakeable] {
-        return [XAttribute(item: self, attr: .Width), XAttribute(item: self, attr: .Height)]
+        return [xWidth, xHeight]
     }
     
     /// provide **[xCenterX, xCenterY]** array.
     public var xCenter: [RelationMakeable] {
-        return [XAttribute(item: self, attr: .CenterX), XAttribute(item: self, attr: .CenterY)]
+        return [xCenterX, xCenterY]
     }
     
     /// provide **[xCenterXWithinMargins, xCenterYWithinMargins]** array.
     @available(iOS 8.0, *)
     public var xCenterWithinMargins: [RelationMakeable] {
-        return [XAttribute(item: self, attr: .CenterXWithinMargins), XAttribute(item: self, attr: .CenterYWithinMargins)]
+        return [xCenterXWithinMargins, xCenterYWithinMargins]
     }
     
-    /// provide **[xTop, xLeading, xBottom, xRight]** array.
+    /// provide **[xTop, xLeading, xBottom, xTrailing]** array.
     public var xEdge: [RelationMakeable] {
-        return [XAttribute(item: self, attr: .Top), XAttribute(item: self, attr: .Leading), XAttribute(item: self, attr: .Bottom), XAttribute(item: self, attr: .Trailing)]
+        return [xTop, xLeading, xBottom, xTrailing]
     }
+    
+    /// provide **[xTop, xLeft, xBottom, xRight]** array.
+    public var xEdgeLR: [RelationMakeable] {
+        return [xTop, xLeft, xBottom, xRight]
+    }
+    
 }

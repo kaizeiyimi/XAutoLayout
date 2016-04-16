@@ -9,13 +9,11 @@
 import UIKit
 
 /// defines the relations that first item can make.
-public protocol _RelationMakeable: AttributeContainer {
+public protocol RelationMakeable: AttributeContainer {
     func equal(other: AttributeContainer) -> NSLayoutConstraint
     func lessOrEqual(other: AttributeContainer) -> NSLayoutConstraint
     func greaterOrEqual(other: AttributeContainer) -> NSLayoutConstraint
 }
-
-public protocol RelationMakeable: _RelationMakeable {}
 
 extension XAttribute: RelationMakeable {}
 
@@ -37,29 +35,31 @@ infix operator =/ {}
 infix operator <=/ {}
 infix operator >=/ {}
 
-// use *left* and *right* to make constraint.
 public func =/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutConstraint { return left.equal(right) }
 public func <=/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutConstraint { return left.lessOrEqual(right) }
 public func >=/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutConstraint { return left.greaterOrEqual(right) }
 
-/// **zip** *left* array and *right* array to make constraints.
 public func =/(left: [RelationMakeable], right: [RelationMakeable]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
 public func =/(left: [RelationMakeable], right: [RelationMakeable?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
 public func =/(left: [RelationMakeable], right: [AttributeContainer]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
 public func =/(left: [RelationMakeable], right: [AttributeContainer?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
 
+// **zip** *left* array and *right* array to make constraints.
 public func compositeEqual(left: [RelationMakeable], _ right: [RelationMakeable]) -> [NSLayoutConstraint] {
     return compositeEqual(left, right.map{$0 as AttributeContainer?})
 }
 
+// **zip** *left* array and *right* array to make constraints.
 public func compositeEqual(left: [RelationMakeable], _ right: [RelationMakeable?]) -> [NSLayoutConstraint] {
     return compositeEqual(left, right.map{$0 as AttributeContainer?})
 }
 
+// **zip** *left* array and *right* array to make constraints.
 public func compositeEqual(left: [RelationMakeable], _ right: [AttributeContainer]) -> [NSLayoutConstraint] {
     return compositeEqual(left, right.map{$0 as AttributeContainer?})
 }
 
+// **zip** *left* array and *right* array to make constraints.
 public func compositeEqual(left: [RelationMakeable], _ right: [AttributeContainer?]) -> [NSLayoutConstraint] {
     return zip(left, right).filter{ $0.1 != nil }.map { $0.0.equal($0.1!) }
 }
@@ -88,8 +88,22 @@ public enum Direction {
         
 }
 
-/// make constraints. *direction* and *autoActive* can be specified to adjust constraints.
-public func xmakeConstraints(direction: Direction = .LeadingToTrailing, autoActive: Bool = true, _ construction: ()->Void) -> [NSLayoutConstraint] {
+/** 
+ make constraints. *direction* and *autoActive* can be specified to adjust constraints.
+ 
+ system has some strange behavior like it allows Top and Left to have a constraint, 
+ but crashs you when Left/Right and Leading/Trailing want to have a constraint.
+ 
+ iOS9 will crash if constraint is make between Leading/Trailing to Left/Right,
+ but has no problem between Leading/Trailing and other anchors.
+ 
+ when working with Direction, we change Leading/Trailing to Left/Right as VFL do if needed,
+ but have no idea about should change or not when only one attribute is Leading/Trailing **and** direction is L2R or R2L **and** other is not horizontal anchor.
+ so I will crash you.
+ 
+ you would better follow a normal layout mind, do not try any tricky things.
+ */
+public func xmakeConstraints(direction: Direction = .LeadingToTrailing, autoActive: Bool = true, @noescape _ construction: ()->Void) -> [NSLayoutConstraint] {
     Context.stack.append(Context(direction: direction, autoActive: autoActive))
     construction()
     return Context.stack.removeLast().constraints
@@ -119,6 +133,7 @@ private class Context {
     }
     
     func adjustAttributes(first first: XAttributeX, second: XAttributeX) -> (first: XAttributeX, second: XAttributeX) {
+        crashIfNeeded(firstAttr: first.attr, secondAttr: second.attr, direction: direction)
         var attributes = (firstItem: first.item!, firstAttr: first.attr, secondItem: second.item, secondAttr: second.attr, constant: second.constant)
         // number
         if attributes.firstAttr != .Width && attributes.firstAttr != .Height && attributes.secondItem == nil && attributes.secondAttr == .NotAnAttribute {
@@ -138,14 +153,45 @@ private class Context {
                 return attr
             }
         }
-        let (firstAttr, secondAttr) = (adjust(attributes.firstAttr), adjust(attributes.secondAttr))
+        let (adjustedFirstAttr, adjustedSecondAttr) = (adjust(attributes.firstAttr), adjust(attributes.secondAttr))
         
-        // constant. very important logic. no why, but just as apple do.
-        if attributes.firstAttr != firstAttr && direction == .RightToLeft {
+        // constant convert. since pair is checked, here we only need to check firstAttr.
+        if attributes.firstAttr != adjustedFirstAttr && direction == .RightToLeft {
             attributes.constant = -attributes.constant
         }
-        (attributes.firstAttr, attributes.secondAttr) = (firstAttr, secondAttr)
+        (attributes.firstAttr, attributes.secondAttr) = (adjustedFirstAttr, adjustedSecondAttr)
         
         return (XAttributeX(other: first, attr: attributes.firstAttr), XAttributeX(other: second, item: attributes.secondItem, attr: attributes.secondAttr, constant: attributes.constant))
+    }
+}
+
+
+// apple only check horizontal attr, and crashs app in iOS9 if pair is not satisfied.
+private func crashIfNeeded(firstAttr firstAttr: NSLayoutAttribute, secondAttr: NSLayoutAttribute, direction: Direction) {
+    guard direction != .LeadingToTrailing else { return }
+    
+    let Normal = 0, NotAnAttribute = 1, Dimension = 2, LeadingTailingAnchor = 3, LeftRightAnchor = 4
+    func convert(attr: NSLayoutAttribute) -> Int {
+        switch attr {
+        case .Leading, .LeadingMargin, .Trailing, .TrailingMargin:
+            return LeadingTailingAnchor
+        case .Left, .LeftMargin, .Right, .RightMargin:
+            return LeftRightAnchor
+        case .Width, .Height:
+            return Dimension
+        case .NotAnAttribute:
+            return NotAnAttribute
+        default:
+            return Normal
+        }
+    }
+    switch (convert(firstAttr), convert(secondAttr)) {
+    case (LeadingTailingAnchor, LeftRightAnchor), (LeadingTailingAnchor, Normal),
+         (LeftRightAnchor, LeadingTailingAnchor), (Normal, LeadingTailingAnchor):
+        NSException(name: NSInvalidArgumentException,
+                    reason: "if not all horizontal attributes, no way to translate `leading` or 'trailing'. so crashs you and here is what apple says: A constraint cannot be made between a leading/trailing attribute and a right/left attribute. Use leading/trailing for both or neither.",
+                    userInfo: nil).raise()
+    default:    // let apple crash you in other issues.
+        break
     }
 }

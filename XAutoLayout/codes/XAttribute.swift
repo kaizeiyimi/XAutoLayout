@@ -9,7 +9,7 @@
 import UIKit
 
 /// x attribute container protocol
-public protocol _AttributeContainer {
+public protocol AttributeContainer {
     /// change the **constant** of result constraint.
     func c(c: CGFloat) -> XAttributeX
     /// change the **multiplier** of result constraint.
@@ -20,8 +20,6 @@ public protocol _AttributeContainer {
     /// generate **XAttributeX** to construct constraint.
     func generateX() -> XAttributeX
 }
-
-public protocol AttributeContainer: _AttributeContainer {}
 
 public extension AttributeContainer {
     func c(c: CGFloat) -> XAttributeX {
