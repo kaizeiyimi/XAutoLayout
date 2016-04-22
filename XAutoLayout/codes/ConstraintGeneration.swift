@@ -8,60 +8,106 @@
 
 import UIKit
 
-/// defines the relations that first item can make.
-public protocol RelationMakeable: AttributeContainer {
-    func equal(other: AttributeContainer) -> NSLayoutConstraint
-    func lessOrEqual(other: AttributeContainer) -> NSLayoutConstraint
-    func greaterOrEqual(other: AttributeContainer) -> NSLayoutConstraint
+
+/// x attribute container protocol
+public protocol XAttributeContainer {
+    /// change the **constant** of result constraint.
+    func xc(c: CGFloat) -> XAttributeX
+    /// change the **multiplier** of result constraint.
+    func xm(m: CGFloat) -> XAttributeX
+    /// change the **priority** of result constraint.
+    func xp(p: UILayoutPriority) -> XAttributeX
+    
+    /**
+     generate **XAttributeX** to construct constraint.
+     
+     **IMPORTANT:** you should not call this method directly. and this is the only method you should provide your own implementation.
+     
+     all other methods are provided with default implementation, and you should not provide your own.
+     */
+    func xGenerateX() -> XAttributeX
 }
 
-extension XAttribute: RelationMakeable {}
+public extension XAttributeContainer {
+    func xc(c: CGFloat) -> XAttributeX {
+        return XAttributeX(other: xGenerateX(), constant: c)
+    }
+    func xm(m: CGFloat) -> XAttributeX {
+        return XAttributeX(other: xGenerateX(), multiplier: m)
+    }
+    func xp(p: UILayoutPriority) -> XAttributeX {
+        return XAttributeX(other: xGenerateX(), priority: p)
+    }
+}
 
-public extension RelationMakeable {
-    public func equal(other: AttributeContainer) -> NSLayoutConstraint {
+
+/**
+ defines the relations that first item can make.
+ 
+ **IMPORTANT:** if you chose to conform this protocol just only implement `generateX`. 
+ 
+ all other methods are provided with default implementation, and you should not provide your own.
+ */
+public protocol XRelationMakeable: XAttributeContainer {
+    func xEqual(other: XAttributeContainer) -> NSLayoutConstraint
+    func xLessOrEqual(other: XAttributeContainer) -> NSLayoutConstraint
+    func xGreaterOrEqual(other: XAttributeContainer) -> NSLayoutConstraint
+}
+
+public extension XRelationMakeable {
+    public func xEqual(other: XAttributeContainer) -> NSLayoutConstraint {
         return Context.stack.last!.make(self, relation: .Equal, right: other)
     }
     
-    public func lessOrEqual(other: AttributeContainer) -> NSLayoutConstraint {
+    public func xLessOrEqual(other: XAttributeContainer) -> NSLayoutConstraint {
         return Context.stack.last!.make(self, relation: .LessThanOrEqual, right: other)
     }
     
-    public func greaterOrEqual(other: AttributeContainer) -> NSLayoutConstraint {
+    public func xGreaterOrEqual(other: XAttributeContainer) -> NSLayoutConstraint {
         return Context.stack.last!.make(self, relation: .GreaterThanOrEqual, right: other)
     }
 }
+
 
 infix operator =/ {}
 infix operator <=/ {}
 infix operator >=/ {}
 
-public func =/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutConstraint { return left.equal(right) }
-public func <=/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutConstraint { return left.lessOrEqual(right) }
-public func >=/(left: RelationMakeable, right: AttributeContainer) -> NSLayoutConstraint { return left.greaterOrEqual(right) }
-
-public func =/(left: [RelationMakeable], right: [RelationMakeable]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
-public func =/(left: [RelationMakeable], right: [RelationMakeable?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
-public func =/(left: [RelationMakeable], right: [AttributeContainer]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
-public func =/(left: [RelationMakeable], right: [AttributeContainer?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+public func =/(left: XRelationMakeable, right: XAttributeContainer) -> NSLayoutConstraint { return left.xEqual(right) }
+public func <=/(left: XRelationMakeable, right: XAttributeContainer) -> NSLayoutConstraint { return left.xLessOrEqual(right) }
+public func >=/(left: XRelationMakeable, right: XAttributeContainer) -> NSLayoutConstraint { return left.xGreaterOrEqual(right) }
 
 // **zip** *left* array and *right* array to make constraints.
-public func compositeEqual(left: [RelationMakeable], _ right: [RelationMakeable]) -> [NSLayoutConstraint] {
-    return compositeEqual(left, right.map{$0 as AttributeContainer?})
+public func =/(left: [XRelationMakeable], right: [XRelationMakeable]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+
+// **zip** *left* array and *right* array to make constraints.
+public func =/(left: [XRelationMakeable], right: [XRelationMakeable?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+
+// **zip** *left* array and *right* array to make constraints.
+public func =/(left: [XRelationMakeable], right: [XAttributeContainer]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+
+// **zip** *left* array and *right* array to make constraints.
+public func =/(left: [XRelationMakeable], right: [XAttributeContainer?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+
+
+// **zip** *left* array and *right* array to make constraints.
+public func compositeEqual(left: [XRelationMakeable], _ right: [XRelationMakeable]) -> [NSLayoutConstraint] {
+    return compositeEqual(left, right.map{$0 as XAttributeContainer?})
 }
 
 // **zip** *left* array and *right* array to make constraints.
-public func compositeEqual(left: [RelationMakeable], _ right: [RelationMakeable?]) -> [NSLayoutConstraint] {
-    return compositeEqual(left, right.map{$0 as AttributeContainer?})
+public func compositeEqual(left: [XRelationMakeable], _ right: [XRelationMakeable?]) -> [NSLayoutConstraint] {
+    return compositeEqual(left, right.map{$0 as XAttributeContainer?})
 }
 
 // **zip** *left* array and *right* array to make constraints.
-public func compositeEqual(left: [RelationMakeable], _ right: [AttributeContainer]) -> [NSLayoutConstraint] {
-    return compositeEqual(left, right.map{$0 as AttributeContainer?})
+public func compositeEqual(left: [XRelationMakeable], _ right: [XAttributeContainer]) -> [NSLayoutConstraint] {
+    return compositeEqual(left, right.map{$0 as XAttributeContainer?})
 }
 
 // **zip** *left* array and *right* array to make constraints.
-public func compositeEqual(left: [RelationMakeable], _ right: [AttributeContainer?]) -> [NSLayoutConstraint] {
-    return zip(left, right).filter{ $0.1 != nil }.map { $0.0.equal($0.1!) }
+public func compositeEqual(left: [XRelationMakeable], _ right: [XAttributeContainer?]) -> [NSLayoutConstraint] {
+    return zip(left, right).filter{ $0.1 != nil }.map { $0.0.xEqual($0.1!) }
 }
 
 public enum Direction {
@@ -123,8 +169,8 @@ private class Context {
         self.autoActive = autoActive
     }
     
-    func make(left:RelationMakeable, relation: NSLayoutRelation, right: AttributeContainer) -> NSLayoutConstraint {
-        let (first, second) = adjustAttributes(first: left.generateX(), second: right.generateX())
+    func make(left:XRelationMakeable, relation: NSLayoutRelation, right: XAttributeContainer) -> NSLayoutConstraint {
+        let (first, second) = adjustAttributes(first: left.xGenerateX(), second: right.xGenerateX())
         let constraint = NSLayoutConstraint(item: first.item!, attribute: first.attr, relatedBy: relation, toItem: second.item, attribute: second.attr, multiplier: second.multiplier, constant: second.constant)
         constraint.priority = second.priority
         constraint.active = autoActive
