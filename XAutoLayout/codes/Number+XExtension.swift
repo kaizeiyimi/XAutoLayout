@@ -9,21 +9,21 @@
 import UIKit
 
 
-extension Int: XAttributeContainer {}
-extension Int8: XAttributeContainer {}
-extension Int16: XAttributeContainer {}
-extension Int32: XAttributeContainer {}
-extension Int64: XAttributeContainer {}
+extension Int: XRightItem {}
+extension Int8: XRightItem {}
+extension Int16: XRightItem {}
+extension Int32: XRightItem {}
+extension Int64: XRightItem {}
 
-extension UInt: XAttributeContainer {}
-extension UInt8: XAttributeContainer {}
-extension UInt16: XAttributeContainer {}
-extension UInt32: XAttributeContainer {}
-extension UInt64: XAttributeContainer {}
+extension UInt: XRightItem {}
+extension UInt8: XRightItem {}
+extension UInt16: XRightItem {}
+extension UInt32: XRightItem {}
+extension UInt64: XRightItem {}
 
-extension Float: XAttributeContainer {}
-extension CGFloat: XAttributeContainer {}
-extension Double: XAttributeContainer {}
+extension Float: XRightItem {}
+extension CGFloat: XRightItem {}
+extension Double: XRightItem {}
 
 extension SignedNumberType {
     public func xGenerateX() -> XAttributeX {

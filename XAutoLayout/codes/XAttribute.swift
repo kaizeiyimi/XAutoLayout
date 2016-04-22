@@ -46,14 +46,14 @@ public final class XAttributeX {
 }
 
 
-extension XAttribute: XRelationMakeable {
+extension XAttribute: XLeftItem {
     public func xGenerate() -> XAttribute {
         return XAttribute(item: item, attr: attr)
     }
 }
 
 
-extension XAttributeX: XAttributeContainer {
+extension XAttributeX: XRightItem {
     public func xGenerateX() -> XAttributeX {
         return XAttributeX(other: self)
     }
