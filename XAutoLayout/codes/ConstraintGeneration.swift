@@ -9,15 +9,33 @@
 import UIKit
 
 
-/// x attribute container protocol
+/**
+ make constraints. *direction* and *autoActive* can be specified to adjust constraints.
+ 
+ **IMPORTANT:** 
+ * I just change the writing way of creating constraints in code, and add only one additional ability: use superview if number is second item and first item is UIView and layout attribute is not dimension.
+ 
+ 
+ * when working with Direction, we change Leading/Trailing to Left/Right as VFL do if needed,
+ but have no idea about should change or not when only one attribute is Leading/Trailing **and** direction is L2R or R2L **and** another is not horizontal anchor.
+ so I will crash you.
+ 
+ **NOTICE:**
+ 
+ system has some strange behavior like it allows Top and Left to have a constraint,
+ and iOS9 will **crash** if constraint is made between **Leading/Trailing to Left/Right**, while iOS8 will not.
+ It has no problem between **Leading/Trailing** and other **non-dimension** anchors (dimension anchors will give an exception **"`Invalid pairing of layout attributes`"**).
+ 
+ so, you would better follow a normal layout mind, do not try any tricky things.
+ */
+public func xmakeConstraints(direction: Direction = .LeadingToTrailing, autoActive: Bool = true, @noescape _ construction: ()->Void) -> [NSLayoutConstraint] {
+    Context.stack.append(Context(direction: direction, autoActive: autoActive))
+    construction()
+    return Context.stack.removeLast().constraints
+}
+
+
 public protocol XAttributeContainer {
-    /// change the **constant** of result constraint.
-    func xc(c: CGFloat) -> XAttributeX
-    /// change the **multiplier** of result constraint.
-    func xm(m: CGFloat) -> XAttributeX
-    /// change the **priority** of result constraint.
-    func xp(p: UILayoutPriority) -> XAttributeX
-    
     /**
      generate **XAttributeX** to construct constraint.
      
@@ -28,43 +46,66 @@ public protocol XAttributeContainer {
     func xGenerateX() -> XAttributeX
 }
 
+
 public extension XAttributeContainer {
-    func xc(c: CGFloat) -> XAttributeX {
+    /// change the **constant** of result constraint.
+    public func xc(c: CGFloat) -> XAttributeX {
         return XAttributeX(other: xGenerateX(), constant: c)
     }
-    func xm(m: CGFloat) -> XAttributeX {
+    
+    /**
+     change the **multiplier** of result constraint.
+     
+     NOTICE: when use with `number`, **`multiplier`** is ignored by iOS.
+     ```
+     // the view's height will be 10 not 20.
+     NSLayoutConstraint(item: view, 
+                        attribute: .Height,
+                        relatedBy: .Equal,
+                        toItem: nil,
+                        attribute: .NotAnAttribute,
+                        multiplier: 2,
+                        constant: 10)
+     ```
+     That's to say 10.xm(2) has no effect, the constant will still be 10. I just follow system's behavior.
+     */
+    public func xm(m: CGFloat) -> XAttributeX {
         return XAttributeX(other: xGenerateX(), multiplier: m)
     }
-    func xp(p: UILayoutPriority) -> XAttributeX {
+    /// change the **priority** of result constraint.
+    public func xp(p: UILayoutPriority) -> XAttributeX {
         return XAttributeX(other: xGenerateX(), priority: p)
     }
 }
 
 
-/**
- defines the relations that first item can make.
- 
- **IMPORTANT:** if you chose to conform this protocol just only implement `generateX`. 
- 
- all other methods are provided with default implementation, and you should not provide your own.
- */
 public protocol XRelationMakeable: XAttributeContainer {
-    func xEqual(other: XAttributeContainer) -> NSLayoutConstraint
-    func xLessOrEqual(other: XAttributeContainer) -> NSLayoutConstraint
-    func xGreaterOrEqual(other: XAttributeContainer) -> NSLayoutConstraint
+    /**
+     **IMPORTANT:** if you chose to conform this protocol just only implement **`xGenerate`**.
+     
+     all other methods are provided with default implementation, and you should not provide your own.
+     */
+    func xGenerate() -> XAttribute
 }
 
+
 public extension XRelationMakeable {
+    /// make `equal` relation to other.
     public func xEqual(other: XAttributeContainer) -> NSLayoutConstraint {
         return Context.stack.last!.make(self, relation: .Equal, right: other)
     }
-    
+    /// make `less or equal` relation to other.
     public func xLessOrEqual(other: XAttributeContainer) -> NSLayoutConstraint {
         return Context.stack.last!.make(self, relation: .LessThanOrEqual, right: other)
     }
-    
+    /// make `greater or equal` relation to other.
     public func xGreaterOrEqual(other: XAttributeContainer) -> NSLayoutConstraint {
         return Context.stack.last!.make(self, relation: .GreaterThanOrEqual, right: other)
+    }
+    
+    public func xGenerateX() -> XAttributeX {
+        let attribute = xGenerate()
+        return XAttributeX(item: attribute.item, attr: attribute.attr)
     }
 }
 
@@ -78,37 +119,38 @@ public func <=/(left: XRelationMakeable, right: XAttributeContainer) -> NSLayout
 public func >=/(left: XRelationMakeable, right: XAttributeContainer) -> NSLayoutConstraint { return left.xGreaterOrEqual(right) }
 
 // **zip** *left* array and *right* array to make constraints.
-public func =/(left: [XRelationMakeable], right: [XRelationMakeable]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+public func =/(left: [XRelationMakeable], right: [XRelationMakeable]) -> [NSLayoutConstraint] { return xEqual(left, right) }
 
 // **zip** *left* array and *right* array to make constraints.
-public func =/(left: [XRelationMakeable], right: [XRelationMakeable?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+public func =/(left: [XRelationMakeable], right: [XRelationMakeable?]) -> [NSLayoutConstraint] { return xEqual(left, right) }
 
 // **zip** *left* array and *right* array to make constraints.
-public func =/(left: [XRelationMakeable], right: [XAttributeContainer]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+public func =/(left: [XRelationMakeable], right: [XAttributeContainer]) -> [NSLayoutConstraint] { return xEqual(left, right) }
 
 // **zip** *left* array and *right* array to make constraints.
-public func =/(left: [XRelationMakeable], right: [XAttributeContainer?]) -> [NSLayoutConstraint] { return compositeEqual(left, right) }
+public func =/(left: [XRelationMakeable], right: [XAttributeContainer?]) -> [NSLayoutConstraint] { return xEqual(left, right) }
 
 
 // **zip** *left* array and *right* array to make constraints.
-public func compositeEqual(left: [XRelationMakeable], _ right: [XRelationMakeable]) -> [NSLayoutConstraint] {
-    return compositeEqual(left, right.map{$0 as XAttributeContainer?})
+public func xEqual(left: [XRelationMakeable], _ right: [XRelationMakeable]) -> [NSLayoutConstraint] {
+    return xEqual(left, right.map{$0 as XAttributeContainer?})
 }
 
 // **zip** *left* array and *right* array to make constraints.
-public func compositeEqual(left: [XRelationMakeable], _ right: [XRelationMakeable?]) -> [NSLayoutConstraint] {
-    return compositeEqual(left, right.map{$0 as XAttributeContainer?})
+public func xEqual(left: [XRelationMakeable], _ right: [XRelationMakeable?]) -> [NSLayoutConstraint] {
+    return xEqual(left, right.map{$0 as XAttributeContainer?})
 }
 
 // **zip** *left* array and *right* array to make constraints.
-public func compositeEqual(left: [XRelationMakeable], _ right: [XAttributeContainer]) -> [NSLayoutConstraint] {
-    return compositeEqual(left, right.map{$0 as XAttributeContainer?})
+public func xEqual(left: [XRelationMakeable], _ right: [XAttributeContainer]) -> [NSLayoutConstraint] {
+    return xEqual(left, right.map{$0 as XAttributeContainer?})
 }
 
 // **zip** *left* array and *right* array to make constraints.
-public func compositeEqual(left: [XRelationMakeable], _ right: [XAttributeContainer?]) -> [NSLayoutConstraint] {
+public func xEqual(left: [XRelationMakeable], _ right: [XAttributeContainer?]) -> [NSLayoutConstraint] {
     return zip(left, right).filter{ $0.1 != nil }.map { $0.0.xEqual($0.1!) }
 }
+
 
 public enum Direction {
     case LeadingToTrailing
@@ -131,33 +173,10 @@ public enum Direction {
         case .RightToLeft: return NSLayoutFormatOptions.DirectionRightToLeft
         }
     }
-        
-}
-
-/** 
- make constraints. *direction* and *autoActive* can be specified to adjust constraints.
- 
- system has some strange behavior like it allows Top and Left to have a constraint, 
- but crashs you when Left/Right and Leading/Trailing want to have a constraint.
- 
- iOS9 will crash if constraint is make between Leading/Trailing to Left/Right,
- but has no problem between Leading/Trailing and other anchors.
- 
- when working with Direction, we change Leading/Trailing to Left/Right as VFL do if needed,
- but have no idea about should change or not when only one attribute is Leading/Trailing **and** direction is L2R or R2L **and** other is not horizontal anchor.
- so I will crash you.
- 
- you would better follow a normal layout mind, do not try any tricky things.
- */
-public func xmakeConstraints(direction: Direction = .LeadingToTrailing, autoActive: Bool = true, @noescape _ construction: ()->Void) -> [NSLayoutConstraint] {
-    Context.stack.append(Context(direction: direction, autoActive: autoActive))
-    construction()
-    return Context.stack.removeLast().constraints
 }
 
 
 private class Context {
-    
     let direction: Direction
     let autoActive: Bool
     var constraints: [NSLayoutConstraint] = []

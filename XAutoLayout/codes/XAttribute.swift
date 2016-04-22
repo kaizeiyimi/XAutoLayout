@@ -47,8 +47,8 @@ public final class XAttributeX {
 
 
 extension XAttribute: XRelationMakeable {
-    public func xGenerateX() -> XAttributeX {
-        return XAttributeX(item: item, attr: attr)
+    public func xGenerate() -> XAttribute {
+        return XAttribute(item: item, attr: attr)
     }
 }
 

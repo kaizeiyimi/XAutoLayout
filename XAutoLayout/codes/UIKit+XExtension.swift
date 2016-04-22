@@ -51,10 +51,10 @@ extension UILayoutSupport {
 
 @available(iOS 9.0, *)
 extension NSLayoutAnchor: XRelationMakeable {
-    public func xGenerateX() -> XAttributeX {
+    public func xGenerate() -> XAttribute {
         let item = valueForKey("item")!
         let attr = NSLayoutAttribute(rawValue: valueForKey("attr") as! Int)!
-        return XAttributeX(item: item, attr: attr)
+        return XAttribute(item: item, attr: attr)
     }
 }
 
