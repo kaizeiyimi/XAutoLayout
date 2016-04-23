@@ -3,6 +3,7 @@
 import UIKit
 import XAutoLayout
 
+
 let vc = UIViewController()
 
 let view = vc.view
@@ -20,11 +21,17 @@ view.addSubview(v2)
 
 [v1, v2].forEach{$0.translatesAutoresizingMaskIntoConstraints = false}
 
-NSLayoutConstraint.activateConstraints( v1.xEdge =/ [10,5,-10,-20] )
+//NSLayoutConstraint.activateConstraints( v1.xEdge =/ [10,5,-10,-20] )
 xmakeConstraints(.LeftToRight) {
-//        v1.xEdge =/ [10,5,-10,-20]
-    v2.xSize =/ [50, view.heightAnchor.c(-50)]
-    [v2.xTop, v2.xLeading] =/ [20, 10]
+    v1.xEdge =/ [10,5,nil,-20]
+    v1.xHeight.xEqual(70)
+    
+//    v1.xHeight =/ 35.xm(2)
+//    NSLayoutConstraint(item: v1, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 2, constant: 35).active = true
+    
+    v2.xSize =/ [20, 20]
+    [v2.xTop, v2.xLeading] =/ [v1.xTop.xc(10), v1.xLeading.xc(10)]
+    
 }
 
 view

@@ -8,33 +8,8 @@
 
 import UIKit
 
-/// x attribute container protocol
-public protocol AttributeContainer {
-    /// change the **constant** of result constraint.
-    func c(c: CGFloat) -> XAttributeX
-    /// change the **multiplier** of result constraint.
-    func m(m: CGFloat) -> XAttributeX
-    /// change the **priority** of result constraint.
-    func p(p: UILayoutPriority) -> XAttributeX
-    
-    /// generate **XAttributeX** to construct constraint.
-    func generateX() -> XAttributeX
-}
 
-public extension AttributeContainer {
-    func c(c: CGFloat) -> XAttributeX {
-        return XAttributeX(other: generateX(), constant: c)
-    }
-    func m(m: CGFloat) -> XAttributeX {
-        return XAttributeX(other: generateX(), multiplier: m)
-    }
-    func p(p: UILayoutPriority) -> XAttributeX {
-        return XAttributeX(other: generateX(), priority: p)
-    }
-}
-
-
-public final class XAttribute: AttributeContainer {
+public final class XAttribute {
     let item: AnyObject
     let attr: NSLayoutAttribute
     
@@ -42,13 +17,9 @@ public final class XAttribute: AttributeContainer {
         self.item = item
         self.attr = attr
     }
-    
-    public func generateX() -> XAttributeX {
-        return XAttributeX(item: item, attr: attr)
-    }
 }
 
-public final class XAttributeX: AttributeContainer {
+public final class XAttributeX {
     let item: AnyObject?
     let attr: NSLayoutAttribute
     
@@ -65,15 +36,30 @@ public final class XAttributeX: AttributeContainer {
     }
     
     /// init with other **XAttributeX** variable. additional property will be used if provided.
-    public init(other: XAttributeX, item: AnyObject? = nil, attr: NSLayoutAttribute? = nil, constant: CGFloat? = nil, multiplier: CGFloat? = nil, priority: UILayoutPriority? = nil) {
-        self.item = item ?? other.item
-        self.attr = attr ?? other.attr
-        self.constant = constant ?? other.constant
-        self.multiplier = multiplier ?? other.multiplier
-        self.priority = priority ?? other.priority
+    convenience init(other: XAttributeX, item: AnyObject? = nil, attr: NSLayoutAttribute? = nil, constant: CGFloat? = nil, multiplier: CGFloat? = nil, priority: UILayoutPriority? = nil) {
+        self.init(item: item ?? other.item,
+                  attr: attr ?? other.attr,
+                  constant: constant ?? other.constant,
+                  multiplier: multiplier ?? other.multiplier,
+                  priority: priority ?? other.priority)
     }
     
-    public func generateX() -> XAttributeX {
+    convenience init(leftItem: XLeftItem) {
+        let attribute = leftItem.xGenerate()
+        self.init(item: attribute.item, attr: attribute.attr)
+    }
+}
+
+
+extension XAttribute: XLeftItem {
+    public func xGenerate() -> XAttribute {
+        return XAttribute(item: item, attr: attr)
+    }
+}
+
+
+extension XAttributeX: XRightItem {
+    public func xGenerateX() -> XAttributeX {
         return self
     }
 }
