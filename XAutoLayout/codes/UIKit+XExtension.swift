@@ -58,7 +58,9 @@ extension NSLayoutAnchor: XLeftItem {
     }
 }
 
-
+/**
+ just some easy wrapper. you can use array like [xLeading, xTop] =/ [10, 20].
+ */
 extension UIView {
     
     /// provide **[xWidth, xHeight]** array.

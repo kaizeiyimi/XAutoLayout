@@ -105,8 +105,7 @@ public extension XLeftItem {
     }
     
     public func xGenerateX() -> XAttributeX {
-        let attribute = xGenerate()
-        return XAttributeX(item: attribute.item, attr: attribute.attr)
+        return XAttributeX(leftItem: self)
     }
 }
 
@@ -190,7 +189,7 @@ private class Context {
     }
     
     func make(left:XLeftItem, relation: NSLayoutRelation, right: XRightItem) -> NSLayoutConstraint {
-        let (first, second) = adjustAttributes(first: left.xGenerateX(), second: right.xGenerateX())
+        let (first, second) = adjustAttributes(first: XAttributeX(leftItem: left), second: right.xGenerateX())
         let constraint = NSLayoutConstraint(item: first.item!, attribute: first.attr, relatedBy: relation, toItem: second.item, attribute: second.attr, multiplier: second.multiplier, constant: second.constant)
         constraint.priority = second.priority
         constraint.active = autoActive
@@ -200,12 +199,12 @@ private class Context {
     
     func adjustAttributes(first first: XAttributeX, second: XAttributeX) -> (first: XAttributeX, second: XAttributeX) {
         crashIfNeeded(firstAttr: first.attr, secondAttr: second.attr, direction: direction)
-        var attributes = (firstItem: first.item!, firstAttr: first.attr, secondItem: second.item, secondAttr: second.attr, constant: second.constant)
+        var firstItem = first.item!, firstAttr = first.attr, secondItem = second.item, secondAttr = second.attr, constant = second.constant
         // number
-        if attributes.firstAttr != .Width && attributes.firstAttr != .Height && attributes.secondItem == nil && attributes.secondAttr == .NotAnAttribute {
-            if let firstView = attributes.firstItem as? UIView {
-                attributes.secondItem = firstView.superview
-                attributes.secondAttr = attributes.firstAttr
+        if firstAttr != .Width && firstAttr != .Height && secondItem == nil && secondAttr == .NotAnAttribute {
+            if let firstView = firstItem as? UIView {
+                secondItem = firstView.superview
+                secondAttr = firstAttr
             }
         }
         // direction
@@ -219,15 +218,15 @@ private class Context {
                 return attr
             }
         }
-        let (adjustedFirstAttr, adjustedSecondAttr) = (adjust(attributes.firstAttr), adjust(attributes.secondAttr))
+        let (adjustedFirstAttr, adjustedSecondAttr) = (adjust(firstAttr), adjust(secondAttr))
         
         // constant convert. since pair is checked, here we only need to check firstAttr.
-        if attributes.firstAttr != adjustedFirstAttr && direction == .RightToLeft {
-            attributes.constant = -attributes.constant
+        if firstAttr != adjustedFirstAttr && direction == .RightToLeft {
+            constant = -constant
         }
-        (attributes.firstAttr, attributes.secondAttr) = (adjustedFirstAttr, adjustedSecondAttr)
+        (firstAttr, secondAttr) = (adjustedFirstAttr, adjustedSecondAttr)
         
-        return (XAttributeX(other: first, attr: attributes.firstAttr), XAttributeX(other: second, item: attributes.secondItem, attr: attributes.secondAttr, constant: attributes.constant))
+        return (XAttributeX(other: first, attr: firstAttr), XAttributeX(other: second, item: secondItem, attr: secondAttr, constant: constant))
     }
 }
 

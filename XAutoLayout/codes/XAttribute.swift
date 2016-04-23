@@ -36,12 +36,17 @@ public final class XAttributeX {
     }
     
     /// init with other **XAttributeX** variable. additional property will be used if provided.
-     init(other: XAttributeX, item: AnyObject? = nil, attr: NSLayoutAttribute? = nil, constant: CGFloat? = nil, multiplier: CGFloat? = nil, priority: UILayoutPriority? = nil) {
-        self.item = item ?? other.item
-        self.attr = attr ?? other.attr
-        self.constant = constant ?? other.constant
-        self.multiplier = multiplier ?? other.multiplier
-        self.priority = priority ?? other.priority
+    convenience init(other: XAttributeX, item: AnyObject? = nil, attr: NSLayoutAttribute? = nil, constant: CGFloat? = nil, multiplier: CGFloat? = nil, priority: UILayoutPriority? = nil) {
+        self.init(item: item ?? other.item,
+                  attr: attr ?? other.attr,
+                  constant: constant ?? other.constant,
+                  multiplier: multiplier ?? other.multiplier,
+                  priority: priority ?? other.priority)
+    }
+    
+    convenience init(leftItem: XLeftItem) {
+        let attribute = leftItem.xGenerate()
+        self.init(item: attribute.item, attr: attribute.attr)
     }
 }
 
@@ -55,6 +60,6 @@ extension XAttribute: XLeftItem {
 
 extension XAttributeX: XRightItem {
     public func xGenerateX() -> XAttributeX {
-        return XAttributeX(other: self)
+        return self
     }
 }
