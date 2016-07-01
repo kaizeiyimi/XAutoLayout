@@ -24,6 +24,8 @@ extension UIView {
     public var xLastBaseline: XLeftItem { return XAttribute(item: self, attr: .LastBaseline) }
 
     @available(iOS 8.0, *)
+    public var xFirstBaseline: XLeftItem { return XAttribute(item: self, attr: .FirstBaseline) }
+    @available(iOS 8.0, *)
     public var xLeftMargin: XLeftItem { return XAttribute(item: self, attr: .LeftMargin) }
     @available(iOS 8.0, *)
     public var xRightMargin: XLeftItem { return XAttribute(item: self, attr: .RightMargin) }
