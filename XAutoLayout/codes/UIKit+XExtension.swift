@@ -47,7 +47,7 @@ extension UILayoutSupport {
     public var xBottom: XLeftItem { return XAttribute(item: self, attr: .Bottom) }
     public var xHeight: XLeftItem { return XAttribute(item: self, attr: .Height) }
     
-    subscript (attrs: NSLayoutAttribute...) -> [XLeftItem] {
+    public subscript (attrs: NSLayoutAttribute...) -> [XLeftItem] {
         return attrs.map { XAttribute(item: self, attr: $0) }
     }
 }
@@ -93,7 +93,7 @@ extension UIView {
         return [xTop, xLeft, xBottom, xRight]
     }
     
-    subscript (attrs: NSLayoutAttribute...) -> [XLeftItem] {
+    public subscript (attrs: NSLayoutAttribute...) -> [XLeftItem] {
         return attrs.map { XAttribute(item: self, attr: $0) }
     }
     
