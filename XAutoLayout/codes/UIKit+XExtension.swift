@@ -20,7 +20,6 @@ extension UIView {
     public var xHeight: XLeftItem { return XAttribute(item: self, attr: .Height) }
     public var xCenterX: XLeftItem { return XAttribute(item: self, attr: .CenterX) }
     public var xCenterY: XLeftItem { return XAttribute(item: self, attr: .CenterY) }
-    public var xBaseline: XLeftItem { return XAttribute(item: self, attr: .Baseline) }
     public var xLastBaseline: XLeftItem { return XAttribute(item: self, attr: .LastBaseline) }
 
     @available(iOS 8.0, *)
