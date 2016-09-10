@@ -10,7 +10,7 @@ if you seek swift 2.3 version, use 1.3.0 instead.
 
 ### Latest version
 
-current latest version is **1.2.0**.
+current latest version is **2.0.0**.
 
 ### Quick look
 
