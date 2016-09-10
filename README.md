@@ -1,10 +1,12 @@
 ## XAutoLayout
 
-uses some swift 2 amazing feature, provides a very short and clear way to make constraints in code.  
+uses some swift amazing feature, provides a very short and clear way to make constraints in code.  
 
-### XCode 7 and above
+### XCode 8 and above
 
-since swift 2.2 is reqiured, you need XCode 7.3 and above.
+since swift 3 is reqiured, you need XCode 8 and above.
+if you seek swift 2.3 version, use 1.3.0 instead.
+
 
 ### Latest version
 

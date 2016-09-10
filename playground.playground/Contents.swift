@@ -6,23 +6,23 @@ import XAutoLayout
 
 let vc = UIViewController()
 
-let view = vc.view
+let view = vc.view!
 view.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
 
-view.backgroundColor = UIColor.purpleColor()
+view.backgroundColor = UIColor.purple
 let v1 = UIView()
-v1.backgroundColor = UIColor.orangeColor()
+v1.backgroundColor = UIColor.orange
 v1.frame = CGRect(x: 10, y: 5, width: 40, height: 40)
 view.addSubview(v1)
 
 let v2 = UIView(frame: CGRect(x: 10, y: 55, width: 40, height: 40))
-v2.backgroundColor = UIColor.redColor()
+v2.backgroundColor = UIColor.red
 view.addSubview(v2)
 
 [v1, v2].forEach{$0.translatesAutoresizingMaskIntoConstraints = false}
 
 //NSLayoutConstraint.activateConstraints( v1.xEdge =/ [10,5,-10,-20] )
-xmakeConstraints(.LeftToRight) {
+xmakeConstraints(direction: .leftToRight) {
     v1.xEdge =/ [10,5,nil,-20]
     v1.xHeight.xEqual(70)
     

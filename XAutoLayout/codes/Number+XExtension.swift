@@ -25,14 +25,14 @@ extension Float: XRightItem {}
 extension CGFloat: XRightItem {}
 extension Double: XRightItem {}
 
-extension SignedNumberType {
+extension SignedNumber {
     public func xGenerateX() -> XAttributeX {
-        return XAttributeX(item: nil, attr: .NotAnAttribute, constant: CGFloat(("\(self)" as NSString).doubleValue))
+        return XAttributeX(item: nil, attr: .notAnAttribute, constant: CGFloat(("\(self)" as NSString).doubleValue))
     }
 }
 
-extension UnsignedIntegerType {
+extension UnsignedInteger {
     public func xGenerateX() -> XAttributeX {
-        return XAttributeX(item: nil, attr: .NotAnAttribute, constant: CGFloat(("\(self)" as NSString).doubleValue))
+        return XAttributeX(item: nil, attr: .notAnAttribute, constant: CGFloat(("\(self)" as NSString).doubleValue))
     }
 }

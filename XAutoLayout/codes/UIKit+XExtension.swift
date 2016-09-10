@@ -10,43 +10,43 @@ import UIKit
 
 
 extension UIView {
-    public var xLeft: XLeftItem { return XAttribute(item: self, attr: .Left) }
-    public var xRight: XLeftItem { return XAttribute(item: self, attr: .Right) }
-    public var xTop: XLeftItem { return XAttribute(item: self, attr: .Top) }
-    public var xBottom: XLeftItem { return XAttribute(item: self, attr: .Bottom) }
-    public var xLeading: XLeftItem { return XAttribute(item: self, attr: .Leading) }
-    public var xTrailing: XLeftItem { return XAttribute(item: self, attr: .Trailing) }
-    public var xWidth: XLeftItem { return XAttribute(item: self, attr: .Width) }
-    public var xHeight: XLeftItem { return XAttribute(item: self, attr: .Height) }
-    public var xCenterX: XLeftItem { return XAttribute(item: self, attr: .CenterX) }
-    public var xCenterY: XLeftItem { return XAttribute(item: self, attr: .CenterY) }
-    public var xLastBaseline: XLeftItem { return XAttribute(item: self, attr: .LastBaseline) }
+    public var xLeft: XLeftItem { return XAttribute(item: self, attr: .left) }
+    public var xRight: XLeftItem { return XAttribute(item: self, attr: .right) }
+    public var xTop: XLeftItem { return XAttribute(item: self, attr: .top) }
+    public var xBottom: XLeftItem { return XAttribute(item: self, attr: .bottom) }
+    public var xLeading: XLeftItem { return XAttribute(item: self, attr: .leading) }
+    public var xTrailing: XLeftItem { return XAttribute(item: self, attr: .trailing) }
+    public var xWidth: XLeftItem { return XAttribute(item: self, attr: .width) }
+    public var xHeight: XLeftItem { return XAttribute(item: self, attr: .height) }
+    public var xCenterX: XLeftItem { return XAttribute(item: self, attr: .centerX) }
+    public var xCenterY: XLeftItem { return XAttribute(item: self, attr: .centerY) }
+    public var xLastBaseline: XLeftItem { return XAttribute(item: self, attr: .lastBaseline) }
 
     @available(iOS 8.0, *)
-    public var xFirstBaseline: XLeftItem { return XAttribute(item: self, attr: .FirstBaseline) }
+    public var xFirstBaseline: XLeftItem { return XAttribute(item: self, attr: .firstBaseline) }
     @available(iOS 8.0, *)
-    public var xLeftMargin: XLeftItem { return XAttribute(item: self, attr: .LeftMargin) }
+    public var xLeftMargin: XLeftItem { return XAttribute(item: self, attr: .leftMargin) }
     @available(iOS 8.0, *)
-    public var xRightMargin: XLeftItem { return XAttribute(item: self, attr: .RightMargin) }
+    public var xRightMargin: XLeftItem { return XAttribute(item: self, attr: .rightMargin) }
     @available(iOS 8.0, *)
-    public var xTopMargin: XLeftItem { return XAttribute(item: self, attr: .TopMargin) }
+    public var xTopMargin: XLeftItem { return XAttribute(item: self, attr: .topMargin) }
     @available(iOS 8.0, *)
-    public var xBottomMargin: XLeftItem { return XAttribute(item: self, attr: .BottomMargin) }
+    public var xBottomMargin: XLeftItem { return XAttribute(item: self, attr: .bottomMargin) }
     @available(iOS 8.0, *)
-    public var xLeadingMargin: XLeftItem { return XAttribute(item: self, attr: .LeadingMargin) }
+    public var xLeadingMargin: XLeftItem { return XAttribute(item: self, attr: .leadingMargin) }
     @available(iOS 8.0, *)
-    public var xTrailingMargin: XLeftItem { return XAttribute(item: self, attr: .TrailingMargin) }
+    public var xTrailingMargin: XLeftItem { return XAttribute(item: self, attr: .trailingMargin) }
     @available(iOS 8.0, *)
-    public var xCenterXWithinMargins: XLeftItem { return XAttribute(item: self, attr: .CenterXWithinMargins) }
+    public var xCenterXWithinMargins: XLeftItem { return XAttribute(item: self, attr: .centerXWithinMargins) }
     @available(iOS 8.0, *)
-    public var xCenterYWithinMargins: XLeftItem { return XAttribute(item: self, attr: .CenterYWithinMargins) }
+    public var xCenterYWithinMargins: XLeftItem { return XAttribute(item: self, attr: .centerYWithinMargins) }
 }
 
 
 extension UILayoutSupport {
-    public var xTop: XLeftItem { return XAttribute(item: self, attr: .Top) }
-    public var xBottom: XLeftItem { return XAttribute(item: self, attr: .Bottom) }
-    public var xHeight: XLeftItem { return XAttribute(item: self, attr: .Height) }
+    public var xTop: XLeftItem { return XAttribute(item: self, attr: .top) }
+    public var xBottom: XLeftItem { return XAttribute(item: self, attr: .bottom) }
+    public var xHeight: XLeftItem { return XAttribute(item: self, attr: .height) }
     
     public subscript (attrs: NSLayoutAttribute...) -> [XLeftItem] {
         return attrs.map { XAttribute(item: self, attr: $0) }
@@ -55,12 +55,31 @@ extension UILayoutSupport {
 
 
 @available(iOS 9.0, *)
-extension NSLayoutAnchor: XLeftItem {
+extension NSLayoutXAxisAnchor: XLeftItem {
     public func xGenerate() -> XAttribute {
-        let item = valueForKey("item")!
-        let attr = NSLayoutAttribute(rawValue: valueForKey("attr") as! Int)!
-        return XAttribute(item: item, attr: attr)
+        return generateXAttribute(forAnchor: self)
     }
+}
+
+@available(iOS 9.0, *)
+extension NSLayoutYAxisAnchor: XLeftItem {
+    public func xGenerate() -> XAttribute {
+        return generateXAttribute(forAnchor: self)
+    }
+}
+
+@available(iOS 9.0, *)
+extension NSLayoutDimension: XLeftItem {
+    public func xGenerate() -> XAttribute {
+        return generateXAttribute(forAnchor: self)
+    }
+}
+
+@available(iOS 9.0, *)
+private func generateXAttribute<T: AnyObject>(forAnchor anchor: NSLayoutAnchor<T>) -> XAttribute {
+    let item = anchor.value(forKey: "item")!
+    let attr = NSLayoutAttribute(rawValue: anchor.value(forKey: "attr") as! Int)!
+    return XAttribute(item: item as AnyObject, attr: attr)
 }
 
 /**
