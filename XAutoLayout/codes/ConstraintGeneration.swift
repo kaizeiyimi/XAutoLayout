@@ -28,6 +28,7 @@ import UIKit
  
  so, you would better follow a normal layout mind, do not try any tricky things.
  */
+@discardableResult
 public func xmakeConstraints(direction: Direction = .leadingToTrailing, autoActive: Bool = true, _ construction: ()->Void) -> [NSLayoutConstraint] {
     Context.stack.append(Context(direction: direction, autoActive: autoActive))
     construction()
@@ -92,14 +93,17 @@ public protocol XLeftItem: XRightItem {
 
 public extension XLeftItem {
     /// make `equal` relation to other.
+    @discardableResult
     public func xEqual(_ other: XRightItem) -> NSLayoutConstraint {
         return Context.stack.last!.make(left: self, relation: .equal, right: other)
     }
     /// make `less or equal` relation to other.
+    @discardableResult
     public func xLessOrEqual(_ other: XRightItem) -> NSLayoutConstraint {
         return Context.stack.last!.make(left: self, relation: .lessThanOrEqual, right: other)
     }
     /// make `greater or equal` relation to other.
+    @discardableResult
     public func xGreaterOrEqual(_ other: XRightItem) -> NSLayoutConstraint {
         return Context.stack.last!.make(left: self, relation: .greaterThanOrEqual, right: other)
     }
@@ -114,39 +118,20 @@ infix operator =/
 infix operator <=/
 infix operator >=/
 
+@discardableResult
 public func =/(left: XLeftItem, right: XRightItem) -> NSLayoutConstraint { return left.xEqual(right) }
+@discardableResult
 public func <=/(left: XLeftItem, right: XRightItem) -> NSLayoutConstraint { return left.xLessOrEqual(right) }
+@discardableResult
 public func >=/(left: XLeftItem, right: XRightItem) -> NSLayoutConstraint { return left.xGreaterOrEqual(right) }
 
-// **zip** *left* array and *right* array to make constraints.
-public func =/(left: [XLeftItem], right: [XLeftItem]) -> [NSLayoutConstraint] { return xEqual(left, right) }
 
 // **zip** *left* array and *right* array to make constraints.
-public func =/(left: [XLeftItem], right: [XLeftItem?]) -> [NSLayoutConstraint] { return xEqual(left, right) }
-
-// **zip** *left* array and *right* array to make constraints.
-public func =/(left: [XLeftItem], right: [XRightItem]) -> [NSLayoutConstraint] { return xEqual(left, right) }
-
-// **zip** *left* array and *right* array to make constraints.
+@discardableResult
 public func =/(left: [XLeftItem], right: [XRightItem?]) -> [NSLayoutConstraint] { return xEqual(left, right) }
 
-
 // **zip** *left* array and *right* array to make constraints.
-public func xEqual(_ left: [XLeftItem], _ right: [XLeftItem]) -> [NSLayoutConstraint] {
-    return xEqual(left, right.map{$0 as XRightItem?})
-}
-
-// **zip** *left* array and *right* array to make constraints.
-public func xEqual(_ left: [XLeftItem], _ right: [XLeftItem?]) -> [NSLayoutConstraint] {
-    return xEqual(left, right.map{$0 as XRightItem?})
-}
-
-// **zip** *left* array and *right* array to make constraints.
-public func xEqual(_ left: [XLeftItem], _ right: [XRightItem]) -> [NSLayoutConstraint] {
-    return xEqual(left, right.map{$0 as XRightItem?})
-}
-
-// **zip** *left* array and *right* array to make constraints.
+@discardableResult
 public func xEqual(_ left: [XLeftItem], _ right: [XRightItem?]) -> [NSLayoutConstraint] {
     return zip(left, right).filter{ $0.1 != nil }.map { $0.0.xEqual($0.1!) }
 }
