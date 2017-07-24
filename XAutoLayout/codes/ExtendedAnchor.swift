@@ -43,12 +43,21 @@ public class ExtendedAnchor: AnchorExtending {
     let multiplier: CGFloat
     let priority: UILayoutPriority
     
+    #if swift(>=4.0)
+    init(_ anchor: Any?, constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) {
+        self.anchor = anchor
+        self.constant = constant
+        self.multiplier = multiplier
+        self.priority = priority
+    }
+    #else
     init(_ anchor: Any?, constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = UILayoutPriorityRequired) {
         self.anchor = anchor
         self.constant = constant
         self.multiplier = multiplier
         self.priority = priority
     }
+    #endif
     
     convenience init(extending other: ExtendedAnchor, constant: CGFloat? = nil, multiplier: CGFloat? = nil, priority: UILayoutPriority? = nil) {
         self.init(other.anchor,
@@ -76,6 +85,11 @@ public final class ExtendedXAxisAnchor: ExtendedAnchor, Anchor, XAxisAnchor {
         return ExtendedXAxisAnchor(extending: self, priority: priority)
     }
     
+    #if swift(>=4.0)
+    public func p(_ priority: Float) -> ExtendedXAxisAnchor {
+        return ExtendedXAxisAnchor(extending: self, priority: UILayoutPriority(priority))
+    }
+    #endif
 }
 
 extension NSLayoutXAxisAnchor: NSAnchor, XAxisAnchor {
@@ -92,6 +106,12 @@ extension NSLayoutXAxisAnchor: NSAnchor, XAxisAnchor {
     public func p(_ priority: UILayoutPriority) -> ExtendedXAxisAnchor {
         return ExtendedXAxisAnchor(self, priority: priority)
     }
+    
+    #if swift(>=4.0)
+    public func p(_ priority: Float) -> ExtendedXAxisAnchor {
+        return ExtendedXAxisAnchor(self, priority: UILayoutPriority(priority))
+    }
+    #endif
 }
 
 // MARK: - YAxis
@@ -107,6 +127,11 @@ public final class ExtendedYAxisAnchor: ExtendedAnchor, Anchor, YAxisAnchor {
         return ExtendedYAxisAnchor(extending: self, priority: priority)
     }
     
+    #if swift(>=4.0)
+    public func p(_ priority: Float) -> ExtendedYAxisAnchor {
+        return ExtendedYAxisAnchor(extending: self, priority: UILayoutPriority(priority))
+    }
+    #endif
 }
 
 extension NSLayoutYAxisAnchor: NSAnchor, YAxisAnchor {
@@ -123,6 +148,12 @@ extension NSLayoutYAxisAnchor: NSAnchor, YAxisAnchor {
     public func p(_ priority: UILayoutPriority) -> ExtendedYAxisAnchor {
         return ExtendedYAxisAnchor(self, priority: priority)
     }
+    
+    #if swift(>=4.0)
+    public func p(_ priority: Float) -> ExtendedYAxisAnchor {
+        return ExtendedYAxisAnchor(self, priority: UILayoutPriority(priority))
+    }
+    #endif
 }
 
 // MARK: - Dimension
@@ -141,6 +172,12 @@ public final class ExtendedDimensionAnchor: ExtendedAnchor, Anchor, DimensionAnc
     public func m(_ multiplier: CGFloat) -> ExtendedDimensionAnchor {
         return ExtendedDimensionAnchor(extending: self, multiplier: multiplier)
     }
+    
+    #if swift(>=4.0)
+    public func p(_ priority: Float) -> ExtendedDimensionAnchor {
+        return ExtendedDimensionAnchor(extending: self, priority: UILayoutPriority(priority))
+    }
+    #endif
 }
 
 extension NSLayoutDimension: NSAnchor, DimensionAnchor {
@@ -161,45 +198,167 @@ extension NSLayoutDimension: NSAnchor, DimensionAnchor {
     public func m(_ multiplier: CGFloat) -> ExtendedDimensionAnchor {
         return ExtendedDimensionAnchor(self, multiplier: multiplier)
     }
+    
+    #if swift(>=4.0)
+    public func p(_ priority: Float) -> ExtendedDimensionAnchor {
+        return ExtendedDimensionAnchor(self, priority: UILayoutPriority(priority))
+    }
+    #endif
 }
 
-extension Int: Anchor, DimensionAnchor {}
-extension Int8: Anchor, DimensionAnchor {}
-extension Int16: Anchor, DimensionAnchor {}
-extension Int32: Anchor, DimensionAnchor {}
-extension Int64: Anchor, DimensionAnchor {}
 
-extension UInt: Anchor, DimensionAnchor {}
-extension UInt8: Anchor, DimensionAnchor {}
-extension UInt16: Anchor, DimensionAnchor {}
-extension UInt32: Anchor, DimensionAnchor {}
-extension UInt64: Anchor, DimensionAnchor {}
+#if swift(>=4.0)
+    extension Int: Anchor, DimensionAnchor {}
+    extension Int8: Anchor, DimensionAnchor {}
+    extension Int16: Anchor, DimensionAnchor {}
+    extension Int32: Anchor, DimensionAnchor {}
+    extension Int64: Anchor, DimensionAnchor {}
+    
+    extension UInt: Anchor, DimensionAnchor {}
+    extension UInt8: Anchor, DimensionAnchor {}
+    extension UInt16: Anchor, DimensionAnchor {}
+    extension UInt32: Anchor, DimensionAnchor {}
+    extension UInt64: Anchor, DimensionAnchor {}
+    
+    extension Float: Anchor, DimensionAnchor {}
+    extension CGFloat: Anchor, DimensionAnchor {}
+    extension Double: Anchor, DimensionAnchor {}
+    
+    extension Numeric {
+        public typealias AnchorType = NSLayoutDimension
+    
+        public func makeExtendedAnchor() -> ExtendedAnchor {
+            return ExtendedAnchor(nil, constant: self.cgFloatValue)
+        }
+    
+        public func c(_ constant: CGFloat) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: constant)
+        }
+    
+        public func p(_ priority: UILayoutPriority) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: self.cgFloatValue, priority: priority)
+        }
+    
+        public func m(_ multiplier: CGFloat) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: self.cgFloatValue, multiplier: multiplier)
+        }
+    
+        private var cgFloatValue: CGFloat {
+            return CGFloat(("\(self)" as NSString).doubleValue)
+        }
+    
+        public func p(_ priority: Float) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: self.cgFloatValue, priority: UILayoutPriority(priority))
+        }
+    }
+#else
+    extension Int: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    extension Int8: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    extension Int16: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    extension Int32: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    extension Int64: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    
+    extension UInt: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    extension UInt8: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    extension UInt16: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    extension UInt32: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    extension UInt64: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    
+    extension Float: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    extension CGFloat: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    extension Double: Anchor, DimensionAnchor {
+        public typealias AnchorType = NSLayoutDimension
+    }
+    
+    extension UnsignedInteger {
+        public func makeExtendedAnchor() -> ExtendedAnchor {
+            return ExtendedAnchor(nil, constant: self.cgFloatValue)
+        }
+        
+        public func c(_ constant: CGFloat) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: constant)
+        }
+        
+        public func p(_ priority: UILayoutPriority) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: self.cgFloatValue, priority: priority)
+        }
+        
+        public func m(_ multiplier: CGFloat) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: self.cgFloatValue, multiplier: multiplier)
+        }
+        
+        private var cgFloatValue: CGFloat {
+            return CGFloat(("\(self)" as NSString).doubleValue)
+        }
+    }
+#endif
 
-extension Float: Anchor, DimensionAnchor {}
-extension CGFloat: Anchor, DimensionAnchor {}
-extension Double: Anchor, DimensionAnchor {}
-
-extension Numeric {
-    public typealias AnchorType = NSLayoutDimension
-    
-    
-    public func makeExtendedAnchor() -> ExtendedAnchor {
-        return ExtendedAnchor(nil, constant: self.cgFloatValue)
+#if swift(>=3.2)
+    extension SignedNumeric {
+        public func makeExtendedAnchor() -> ExtendedAnchor {
+            return ExtendedAnchor(nil, constant: self.cgFloatValue)
+        }
+        
+        public func c(_ constant: CGFloat) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: constant)
+        }
+        
+        public func p(_ priority: UILayoutPriority) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: self.cgFloatValue, priority: priority)
+        }
+        
+        public func m(_ multiplier: CGFloat) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: self.cgFloatValue, multiplier: multiplier)
+        }
+        
+        private var cgFloatValue: CGFloat {
+            return CGFloat(("\(self)" as NSString).doubleValue)
+        }
     }
-    
-    public func c(_ constant: CGFloat) -> ExtendedDimensionAnchor {
-        return ExtendedDimensionAnchor(nil, constant: constant)
+#else
+    extension SignedNumber {
+        public func makeExtendedAnchor() -> ExtendedAnchor {
+            return ExtendedAnchor(nil, constant: self.cgFloatValue)
+        }
+        
+        public func c(_ constant: CGFloat) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: constant)
+        }
+        
+        public func p(_ priority: UILayoutPriority) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: self.cgFloatValue, priority: priority)
+        }
+        
+        public func m(_ multiplier: CGFloat) -> ExtendedDimensionAnchor {
+            return ExtendedDimensionAnchor(nil, constant: self.cgFloatValue, multiplier: multiplier)
+        }
+        
+        private var cgFloatValue: CGFloat {
+            return CGFloat(("\(self)" as NSString).doubleValue)
+        }
     }
-    
-    public func p(_ priority: UILayoutPriority) -> ExtendedDimensionAnchor {
-        return ExtendedDimensionAnchor(nil, constant: self.cgFloatValue, priority: priority)
-    }
-    
-    public func m(_ multiplier: CGFloat) -> ExtendedDimensionAnchor {
-        return ExtendedDimensionAnchor(nil, constant: self.cgFloatValue, multiplier: multiplier)
-    }
-    
-    private var cgFloatValue: CGFloat {
-        return CGFloat(("\(self)" as NSString).doubleValue)
-    }
-}
+#endif

@@ -3,18 +3,18 @@
    version = "3.0">
    <TimelineItems>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Volumes/MAC2/Projects/iOS/github/kaizei/XAutoLayout/playground.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=2&amp;EndingColumnNumber=2&amp;EndingLineNumber=0&amp;StartingColumnNumber=2&amp;StartingLineNumber=0&amp;Timestamp=522480475.629172"
+         documentLocation = "file:///Users/kaizei/projects/github/XAutoLayout/playground.playground#CharacterRangeLen=0&amp;CharacterRangeLoc=2&amp;EndingColumnNumber=2&amp;EndingLineNumber=0&amp;StartingColumnNumber=2&amp;StartingLineNumber=0&amp;Timestamp=522559385.750948"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Volumes/MAC2/Projects/iOS/github/kaizei/XAutoLayout/playground.playground#CharacterRangeLen=4&amp;CharacterRangeLoc=561&amp;EndingColumnNumber=0&amp;EndingLineNumber=24&amp;StartingColumnNumber=1&amp;StartingLineNumber=23&amp;Timestamp=522480475.629256"
+         documentLocation = "file:///Users/kaizei/projects/github/XAutoLayout/playground.playground#CharacterRangeLen=4&amp;CharacterRangeLoc=561&amp;EndingColumnNumber=0&amp;EndingLineNumber=24&amp;StartingColumnNumber=1&amp;StartingLineNumber=23&amp;Timestamp=522559385.751062"
          lockedSize = "{175, 100}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Volumes/MAC2/Projects/iOS/github/kaizei/XAutoLayout/playground.playground#CharacterRangeLen=595&amp;CharacterRangeLoc=564&amp;EndingColumnNumber=4&amp;EndingLineNumber=39&amp;StartingColumnNumber=4&amp;StartingLineNumber=23&amp;Timestamp=522480475.629324"
+         documentLocation = "file:///Users/kaizei/projects/github/XAutoLayout/playground.playground#CharacterRangeLen=595&amp;CharacterRangeLoc=564&amp;EndingColumnNumber=4&amp;EndingLineNumber=39&amp;StartingColumnNumber=4&amp;StartingLineNumber=23&amp;Timestamp=522559385.751162"
          lockedSize = "{175, 105}"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
