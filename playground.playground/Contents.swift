@@ -33,7 +33,7 @@ view
 [view.topAnchor, view.bottomAnchor] =/ [view.topAnchor, nil]
 [view.topAnchor, view.bottomAnchor] =/ [nil, view.bottomAnchor.c(10)]
 [view.topAnchor, view.bottomAnchor] =/ [view.topAnchor, view.bottomAnchor.c(10)]
-[view.topAnchor, view.bottomAnchor] =/ [view.topAnchor.c(10), view.bottomAnchor.c(10)]
+[view.topAnchor, view.bottomAnchor] =/ [view.topAnchor.c(10).p(750), view.bottomAnchor.c(10)]
 
 view.widthAnchor =/ 10
 

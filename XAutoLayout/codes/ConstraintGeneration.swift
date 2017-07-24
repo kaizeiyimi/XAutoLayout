@@ -46,7 +46,7 @@ public func =/<L>(_ lhs: [L], _ rhs: [YAxisAnchor?]) -> [NSLayoutConstraint] whe
 }
 
 @discardableResult
-public func =/<L>(_ lhs: [L], _ rhs: [DimensionAnchor?]) -> [NSLayoutConstraint] where L: NSAnchor, L: DimensionAnchor {
+public func =/<L>(_ lhs: [L], _ rhs: [Dimension?]) -> [NSLayoutConstraint] where L: NSAnchor, L: Dimension {
     return zip(lhs, rhs).filter{$0.1 != nil}.map{ pair in
         generate(lhs: pair.0.makeExtendedAnchor(), relation: .equal, rhs: pair.1!.makeExtendedAnchor())
     }
