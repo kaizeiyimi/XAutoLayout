@@ -98,17 +98,33 @@ private func generate(lhs: ExtendedAnchor, relation: NSLayoutRelation, rhs: Exte
         }
     } else if let left = lhs.anchor as? NSLayoutXAxisAnchor {
         let right = rhs.anchor as! NSLayoutXAxisAnchor
-        switch relation {
-        case .equal: constraint = left.constraint(equalTo: right, constant: rhs.constant)
-        case .lessThanOrEqual: constraint = left.constraint(lessThanOrEqualTo: right, constant: rhs.constant)
-        case .greaterThanOrEqual: constraint = left.constraint(greaterThanOrEqualTo: right, constant: rhs.constant)
+        if rhs.useSystemSpace, #available(iOS 11, *) {
+            switch relation {
+            case .equal: constraint = left.constraintEqualToSystemSpacingAfter(right, multiplier: rhs.multiplier)
+            case .lessThanOrEqual: constraint = left.constraintLessThanOrEqualToSystemSpacingAfter(right, multiplier: rhs.multiplier)
+            case .greaterThanOrEqual: constraint = left.constraintGreaterThanOrEqualToSystemSpacingAfter(right, multiplier: rhs.multiplier)
+            }
+        } else {
+            switch relation {
+            case .equal: constraint = left.constraint(equalTo: right, constant: rhs.constant)
+            case .lessThanOrEqual: constraint = left.constraint(lessThanOrEqualTo: right, constant: rhs.constant)
+            case .greaterThanOrEqual: constraint = left.constraint(greaterThanOrEqualTo: right, constant: rhs.constant)
+            }
         }
     } else if let left = lhs.anchor as? NSLayoutYAxisAnchor {
         let right = rhs.anchor as! NSLayoutYAxisAnchor
-        switch relation {
-        case .equal: constraint = left.constraint(equalTo: right, constant: rhs.constant)
-        case .lessThanOrEqual: constraint = left.constraint(lessThanOrEqualTo: right, constant: rhs.constant)
-        case .greaterThanOrEqual: constraint = left.constraint(greaterThanOrEqualTo: right, constant: rhs.constant)
+        if rhs.useSystemSpace, #available(iOS 11, *) {
+            switch relation {
+            case .equal: constraint = left.constraintEqualToSystemSpacingBelow(right, multiplier: rhs.multiplier)
+            case .lessThanOrEqual: constraint = left.constraintLessThanOrEqualToSystemSpacingBelow(right, multiplier: rhs.multiplier)
+            case .greaterThanOrEqual: constraint = left.constraintGreaterThanOrEqualToSystemSpacingBelow(right, multiplier: rhs.multiplier)
+            }
+        } else {
+            switch relation {
+            case .equal: constraint = left.constraint(equalTo: right, constant: rhs.constant)
+            case .lessThanOrEqual: constraint = left.constraint(lessThanOrEqualTo: right, constant: rhs.constant)
+            case .greaterThanOrEqual: constraint = left.constraint(greaterThanOrEqualTo: right, constant: rhs.constant)
+            }
         }
     } else {
         fatalError("maybe new anchor class?")

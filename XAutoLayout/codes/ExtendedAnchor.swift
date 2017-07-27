@@ -21,11 +21,17 @@ public protocol NSAnchor: Anchor {}
 public protocol XAxisAnchor: AnchorExtending {
     func c(_ constant: CGFloat) -> ExtendedXAxisAnchor
     func p(_ priority: UILayoutPriority) -> ExtendedXAxisAnchor
+    
+    @available(iOS 11, *)
+    func useSystemSpace(m: CGFloat) -> ExtendedXAxisAnchor
 }
 
 public protocol YAxisAnchor: AnchorExtending {
     func c(_ constant: CGFloat) -> ExtendedYAxisAnchor
     func p(_ priority: UILayoutPriority) -> ExtendedYAxisAnchor
+    
+    @available(iOS 11, *)
+    func useSystemSpace(m: CGFloat) -> ExtendedYAxisAnchor
 }
 
 public protocol Dimension: AnchorExtending {
@@ -43,27 +49,32 @@ public class ExtendedAnchor {
     let multiplier: CGFloat
     let priority: UILayoutPriority
     
+    let useSystemSpace: Bool
+    
     #if swift(>=4.0)
-    init(_ anchor: Any?, constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required) {
+    init(_ anchor: Any?, constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required, useSystemSpace: Bool = false) {
         self.anchor = anchor
         self.constant = constant
         self.multiplier = multiplier
         self.priority = priority
+        self.useSystemSpace = useSystemSpace
     }
     #else
-    init(_ anchor: Any?, constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = UILayoutPriorityRequired) {
+    init(_ anchor: Any?, constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = UILayoutPriorityRequired, useSystemSpace: Bool = false) {
         self.anchor = anchor
         self.constant = constant
         self.multiplier = multiplier
         self.priority = priority
+        self.useSystemSpace = useSystemSpace
     }
     #endif
     
-    convenience init(extending other: ExtendedAnchor, constant: CGFloat? = nil, multiplier: CGFloat? = nil, priority: UILayoutPriority? = nil) {
+    convenience init(extending other: ExtendedAnchor, constant: CGFloat? = nil, multiplier: CGFloat? = nil, priority: UILayoutPriority? = nil, useSystemSpace: Bool? = nil) {
         self.init(other.anchor,
                   constant: constant ?? other.constant,
                   multiplier: multiplier ?? other.multiplier,
-                  priority: priority ?? other.priority)
+                  priority: priority ?? other.priority,
+                  useSystemSpace: useSystemSpace ?? other.useSystemSpace)
     }
 }
 
@@ -92,6 +103,11 @@ public final class ExtendedXAxisAnchor: ExtendedAnchor, Anchor, XAxisAnchor {
         return ExtendedXAxisAnchor(extending: self, priority: UILayoutPriority(priority))
     }
     #endif
+    
+    @available(iOS 11, *)
+    public func useSystemSpace(m: CGFloat) -> ExtendedXAxisAnchor {
+        return ExtendedXAxisAnchor(extending: self, multiplier: m, useSystemSpace: true)
+    }
 }
 
 extension NSLayoutXAxisAnchor: NSAnchor, XAxisAnchor {
@@ -114,6 +130,11 @@ extension NSLayoutXAxisAnchor: NSAnchor, XAxisAnchor {
         return ExtendedXAxisAnchor(self, priority: UILayoutPriority(priority))
     }
     #endif
+    
+    @available(iOS 11, *)
+    public func useSystemSpace(m: CGFloat) -> ExtendedXAxisAnchor {
+        return ExtendedXAxisAnchor(self, multiplier: m, useSystemSpace: true)
+    }
 }
 
 // MARK: - YAxis
@@ -134,6 +155,11 @@ public final class ExtendedYAxisAnchor: ExtendedAnchor, Anchor, YAxisAnchor {
         return ExtendedYAxisAnchor(extending: self, priority: UILayoutPriority(priority))
     }
     #endif
+    
+    @available(iOS 11, *)
+    public func useSystemSpace(m: CGFloat) -> ExtendedYAxisAnchor {
+        return ExtendedYAxisAnchor(extending: self, multiplier: m, useSystemSpace: true)
+    }
 }
 
 extension NSLayoutYAxisAnchor: NSAnchor, YAxisAnchor {
@@ -156,6 +182,11 @@ extension NSLayoutYAxisAnchor: NSAnchor, YAxisAnchor {
         return ExtendedYAxisAnchor(self, priority: UILayoutPriority(priority))
     }
     #endif
+    
+    @available(iOS 11, *)
+    public func useSystemSpace(m: CGFloat) -> ExtendedYAxisAnchor {
+        return ExtendedYAxisAnchor(self, multiplier: m, useSystemSpace: true)
+    }
 }
 
 // MARK: - Dimension
