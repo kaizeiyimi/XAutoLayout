@@ -22,16 +22,20 @@ public protocol XAxisAnchor: AnchorExtending {
     func c(_ constant: CGFloat) -> ExtendedXAxisAnchor
     func p(_ priority: UILayoutPriority) -> ExtendedXAxisAnchor
     
+#if swift(>=3.2)
     @available(iOS 11, *)
     func useSystemSpace(m: CGFloat) -> ExtendedXAxisAnchor
+#endif
 }
 
 public protocol YAxisAnchor: AnchorExtending {
     func c(_ constant: CGFloat) -> ExtendedYAxisAnchor
     func p(_ priority: UILayoutPriority) -> ExtendedYAxisAnchor
     
+#if swift(>=3.2)
     @available(iOS 11, *)
     func useSystemSpace(m: CGFloat) -> ExtendedYAxisAnchor
+#endif
 }
 
 public protocol Dimension: AnchorExtending {
@@ -51,7 +55,7 @@ public class ExtendedAnchor {
     
     let useSystemSpace: Bool
     
-    #if swift(>=4.0)
+#if swift(>=4.0)
     init(_ anchor: Any?, constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = .required, useSystemSpace: Bool = false) {
         self.anchor = anchor
         self.constant = constant
@@ -59,7 +63,7 @@ public class ExtendedAnchor {
         self.priority = priority
         self.useSystemSpace = useSystemSpace
     }
-    #else
+#elseif swift(>=3.2)
     init(_ anchor: Any?, constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = UILayoutPriorityRequired, useSystemSpace: Bool = false) {
         self.anchor = anchor
         self.constant = constant
@@ -67,8 +71,17 @@ public class ExtendedAnchor {
         self.priority = priority
         self.useSystemSpace = useSystemSpace
     }
-    #endif
+#else   // for xcode 8
+    init(_ anchor: Any?, constant: CGFloat = 0, multiplier: CGFloat = 1, priority: UILayoutPriority = UILayoutPriorityRequired) {
+        self.anchor = anchor
+        self.constant = constant
+        self.multiplier = multiplier
+        self.priority = priority
+        self.useSystemSpace = false
+    }
+#endif
     
+    #if swift(>=3.2)
     convenience init(extending other: ExtendedAnchor, constant: CGFloat? = nil, multiplier: CGFloat? = nil, priority: UILayoutPriority? = nil, useSystemSpace: Bool? = nil) {
         self.init(other.anchor,
                   constant: constant ?? other.constant,
@@ -76,6 +89,14 @@ public class ExtendedAnchor {
                   priority: priority ?? other.priority,
                   useSystemSpace: useSystemSpace ?? other.useSystemSpace)
     }
+    #else
+    convenience init(extending other: ExtendedAnchor, constant: CGFloat? = nil, multiplier: CGFloat? = nil, priority: UILayoutPriority? = nil) {
+        self.init(other.anchor,
+                  constant: constant ?? other.constant,
+                  multiplier: multiplier ?? other.multiplier,
+                  priority: priority ?? other.priority)
+    }
+    #endif
 }
 
 extension ExtendedAnchor: AnchorExtending {
@@ -104,10 +125,12 @@ public final class ExtendedXAxisAnchor: ExtendedAnchor, Anchor, XAxisAnchor {
     }
     #endif
     
+#if swift(>=3.2)
     @available(iOS 11, *)
     public func useSystemSpace(m: CGFloat) -> ExtendedXAxisAnchor {
         return ExtendedXAxisAnchor(extending: self, multiplier: m, useSystemSpace: true)
     }
+#endif
 }
 
 extension NSLayoutXAxisAnchor: NSAnchor, XAxisAnchor {
@@ -131,10 +154,12 @@ extension NSLayoutXAxisAnchor: NSAnchor, XAxisAnchor {
     }
     #endif
     
+#if swift(>=3.2)
     @available(iOS 11, *)
     public func useSystemSpace(m: CGFloat) -> ExtendedXAxisAnchor {
         return ExtendedXAxisAnchor(self, multiplier: m, useSystemSpace: true)
     }
+#endif
 }
 
 // MARK: - YAxis
@@ -156,10 +181,12 @@ public final class ExtendedYAxisAnchor: ExtendedAnchor, Anchor, YAxisAnchor {
     }
     #endif
     
+#if swift(>=3.2)
     @available(iOS 11, *)
     public func useSystemSpace(m: CGFloat) -> ExtendedYAxisAnchor {
         return ExtendedYAxisAnchor(extending: self, multiplier: m, useSystemSpace: true)
     }
+#endif
 }
 
 extension NSLayoutYAxisAnchor: NSAnchor, YAxisAnchor {
@@ -183,10 +210,12 @@ extension NSLayoutYAxisAnchor: NSAnchor, YAxisAnchor {
     }
     #endif
     
+#if swift(>=3.2)
     @available(iOS 11, *)
     public func useSystemSpace(m: CGFloat) -> ExtendedYAxisAnchor {
         return ExtendedYAxisAnchor(self, multiplier: m, useSystemSpace: true)
     }
+#endif
 }
 
 // MARK: - Dimension
