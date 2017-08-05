@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		F6A6428E1BCA06F300A670E9 /* XAutoLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = F6A6428D1BCA06F300A670E9 /* XAutoLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F6A6429D1BCA074D00A670E9 /* ExtendedAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A642991BCA074D00A670E9 /* ExtendedAnchor.swift */; };
+		F6A6429D1BCA074D00A670E9 /* Anchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A642991BCA074D00A670E9 /* Anchor.swift */; };
+		F6ABAF321F35A7FC003968AF /* UIKit+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6ABAF311F35A7FC003968AF /* UIKit+Extension.swift */; };
 		F6D287841F2091DD00C23DED /* ConstraintGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D287831F2091DD00C23DED /* ConstraintGeneration.swift */; };
 		F6FC6DD51C3E64BC00FF8DB4 /* XAutoLayout.podspec in Resources */ = {isa = PBXBuildFile; fileRef = F6FC6DD41C3E64BC00FF8DB4 /* XAutoLayout.podspec */; };
 /* End PBXBuildFile section */
@@ -17,9 +18,9 @@
 		F6A6428A1BCA06F300A670E9 /* XAutoLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XAutoLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A6428D1BCA06F300A670E9 /* XAutoLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XAutoLayout.h; sourceTree = "<group>"; };
 		F6A6428F1BCA06F300A670E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F6A642991BCA074D00A670E9 /* ExtendedAnchor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedAnchor.swift; sourceTree = "<group>"; };
+		F6A642991BCA074D00A670E9 /* Anchor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Anchor.swift; sourceTree = "<group>"; };
+		F6ABAF311F35A7FC003968AF /* UIKit+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIKit+Extension.swift"; sourceTree = "<group>"; };
 		F6D287831F2091DD00C23DED /* ConstraintGeneration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintGeneration.swift; sourceTree = "<group>"; };
-		F6FABAE11BCA1CF60083F9E2 /* playground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = playground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F6FC6DD41C3E64BC00FF8DB4 /* XAutoLayout.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = XAutoLayout.podspec; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -39,7 +40,6 @@
 			children = (
 				F6A6428C1BCA06F300A670E9 /* XAutoLayout */,
 				F6A6428B1BCA06F300A670E9 /* Products */,
-				F6FABAE11BCA1CF60083F9E2 /* playground.playground */,
 			);
 			sourceTree = "<group>";
 		};
@@ -66,7 +66,8 @@
 			isa = PBXGroup;
 			children = (
 				F6D287831F2091DD00C23DED /* ConstraintGeneration.swift */,
-				F6A642991BCA074D00A670E9 /* ExtendedAnchor.swift */,
+				F6A642991BCA074D00A670E9 /* Anchor.swift */,
+				F6ABAF311F35A7FC003968AF /* UIKit+Extension.swift */,
 			);
 			path = codes;
 			sourceTree = "<group>";
@@ -152,7 +153,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6D287841F2091DD00C23DED /* ConstraintGeneration.swift in Sources */,
-				F6A6429D1BCA074D00A670E9 /* ExtendedAnchor.swift in Sources */,
+				F6ABAF321F35A7FC003968AF /* UIKit+Extension.swift in Sources */,
+				F6A6429D1BCA074D00A670E9 /* Anchor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,6 +284,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = kaizei.yimi.XAutoLayout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -300,6 +303,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = kaizei.yimi.XAutoLayout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

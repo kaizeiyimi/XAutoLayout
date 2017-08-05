@@ -15,43 +15,49 @@ infix operator >=/
 // MARK: - single
 
 @discardableResult
-public func =/<L, R>(_ lhs: L, _ rhs: R) -> NSLayoutConstraint where L: NSAnchor, R: Anchor, L == R.AnchorType {
-    return generate(lhs: lhs.makeExtendedAnchor(), relation: .equal, rhs: rhs.makeExtendedAnchor())
+public func =/<A>(_ lhs: A, _ rhs: A) -> NSLayoutConstraint where A: Anchor {
+    return generate(lhs: lhs, relation: .equal, rhs: rhs)
 }
 
 @discardableResult
-public func <=/<L, R>(_ lhs: L, _ rhs: R) -> NSLayoutConstraint where L: NSAnchor, R: Anchor, L == R.AnchorType {
-    return generate(lhs: lhs.makeExtendedAnchor(), relation: .lessThanOrEqual, rhs: rhs.makeExtendedAnchor())
+public func <=/<A>(_ lhs: A, _ rhs: A) -> NSLayoutConstraint where A: Anchor {
+    return generate(lhs: lhs, relation: .lessThanOrEqual, rhs: rhs)
 }
 
 @discardableResult
-public func >=/<L, R>(_ lhs: L, _ rhs: R) -> NSLayoutConstraint where L: NSAnchor, R: Anchor, L == R.AnchorType {
-    return generate(lhs: lhs.makeExtendedAnchor(), relation: .greaterThanOrEqual, rhs: rhs.makeExtendedAnchor())
+public func >=/<A>(_ lhs: A, _ rhs: A) -> NSLayoutConstraint where A: Anchor {
+    return generate(lhs: lhs, relation: .greaterThanOrEqual, rhs: rhs)
 }
 
-// MARK: - multi
+// MARK: - group
 
 @discardableResult
-public func =/<L>(_ lhs: [L], _ rhs: [XAxisAnchor?]) -> [NSLayoutConstraint] where L: NSAnchor, L: XAxisAnchor {
-    return zip(lhs, rhs).filter{$0.1 != nil}.map{ pair in
-        generate(lhs: pair.0.makeExtendedAnchor(), relation: .equal, rhs: pair.1!.makeExtendedAnchor())
-    }
-}
-
-@discardableResult
-public func =/<L>(_ lhs: [L], _ rhs: [YAxisAnchor?]) -> [NSLayoutConstraint] where L: NSAnchor, L: YAxisAnchor {
-    return zip(lhs, rhs).filter{$0.1 != nil}.map{ pair in
-        generate(lhs: pair.0.makeExtendedAnchor(), relation: .equal, rhs: pair.1!.makeExtendedAnchor())
-    }
+public func =/<A1, A2>(_ lhs: (A1, A2), _ rhs: (A1?, A2?)) -> [NSLayoutConstraint]
+    where A1: Anchor, A2: Anchor {
+        return zip( toOptinalAnyArray(lhs.0, lhs.1), toOptinalAnyArray(rhs.0, rhs.1))
+            .filter{ $0.0 != nil && $0.1 != nil }
+            .map{ generate(lhs: $0.0!, relation: .equal, rhs: $0.1!) }
 }
 
 @discardableResult
-public func =/<L>(_ lhs: [L], _ rhs: [Dimension?]) -> [NSLayoutConstraint] where L: NSAnchor, L: Dimension {
-    return zip(lhs, rhs).filter{$0.1 != nil}.map{ pair in
-        generate(lhs: pair.0.makeExtendedAnchor(), relation: .equal, rhs: pair.1!.makeExtendedAnchor())
-    }
+public func =/<A1, A2, A3>(_ lhs: (A1, A2, A3), _ rhs: (A1?, A2?, A3?)) -> [NSLayoutConstraint]
+    where A1: Anchor, A2: Anchor, A3: Anchor {
+        return zip( toOptinalAnyArray(lhs.0, lhs.1, lhs.2), toOptinalAnyArray(rhs.0, rhs.1, rhs.2))
+            .filter{ $0.0 != nil && $0.1 != nil }
+            .map{ generate(lhs: $0.0!, relation: .equal, rhs: $0.1!) }
 }
 
+@discardableResult
+public func =/<A1, A2, A3, A4>(_ lhs: (A1, A2, A3, A4), _ rhs: (A1?, A2?, A3?, A4?)) -> [NSLayoutConstraint]
+    where A1: Anchor, A2: Anchor, A3: Anchor, A4: Anchor {
+        return zip( toOptinalAnyArray(lhs.0, lhs.1, lhs.2, lhs.3), toOptinalAnyArray(rhs.0, rhs.1, rhs.2, rhs.3))
+            .filter{ $0.0 != nil && $0.1 != nil }
+            .map{ generate(lhs: $0.0!, relation: .equal, rhs: $0.1!) }
+}
+
+private func toOptinalAnyArray(_ values: Any?...) -> [Any?] {
+    return values
+}
 
 // MARK: - container
 
@@ -72,80 +78,80 @@ private final class Context {
     
     static var stack: [Context] = []
     
-    init(autoActive: Bool = false) {
+    init(autoActive: Bool) {
         self.autoActive = autoActive
     }
 }
 
-private func generate(lhs: ExtendedAnchor, relation: NSLayoutRelation, rhs: ExtendedAnchor) -> NSLayoutConstraint {
+private func generate(lhs: Any, relation: NSLayoutRelation, rhs: Any) -> NSLayoutConstraint {
     let constraint: NSLayoutConstraint
     
-    if let left = lhs.anchor as? NSLayoutDimension {
-        if rhs.anchor != nil {
-            let right = rhs.anchor as! NSLayoutDimension
+    if let lhs = lhs as? NSLayoutDimension {
+        if let rhs = rhs as? Num {
+            let constant = rhs.constant * rhs.multiplier
             switch relation {
-            case .equal: constraint = left.constraint(equalTo: right, multiplier: rhs.multiplier, constant: rhs.constant)
-            case .lessThanOrEqual: constraint = left.constraint(lessThanOrEqualTo: right, multiplier: rhs.multiplier, constant: rhs.constant)
-            case .greaterThanOrEqual: constraint = left.constraint(greaterThanOrEqualTo: right, multiplier: rhs.multiplier, constant: rhs.constant)
+            case .equal: constraint = lhs.constraint(equalToConstant: constant)
+            case .lessThanOrEqual: constraint = lhs.constraint(lessThanOrEqualToConstant: constant)
+            case .greaterThanOrEqual: constraint = lhs.constraint(greaterThanOrEqualToConstant: constant)
             }
         } else {
-            let right = rhs.constant * rhs.multiplier
+            let rhs = rhs as! NSLayoutDimension
             switch relation {
-            case .equal: constraint = left.constraint(equalToConstant: right)
-            case .lessThanOrEqual: constraint = left.constraint(lessThanOrEqualToConstant: right)
-            case .greaterThanOrEqual: constraint = left.constraint(greaterThanOrEqualToConstant: right)
+            case .equal: constraint = lhs.constraint(equalTo: rhs, multiplier: rhs.multiplier, constant: rhs.constant)
+            case .lessThanOrEqual: constraint = lhs.constraint(lessThanOrEqualTo: rhs, multiplier: rhs.multiplier, constant: rhs.constant)
+            case .greaterThanOrEqual: constraint = lhs.constraint(greaterThanOrEqualTo: rhs, multiplier: rhs.multiplier, constant: rhs.constant)
             }
         }
-    } else if let left = lhs.anchor as? NSLayoutXAxisAnchor {
-        let right = rhs.anchor as! NSLayoutXAxisAnchor
+    } else if let lhs = lhs as? NSLayoutXAxisAnchor {
+        let rhs = rhs as! NSLayoutXAxisAnchor
         #if swift(>=3.2)
             if rhs.useSystemSpace, #available(iOS 11, *) {
                 switch relation {
-                case .equal: constraint = left.constraintEqualToSystemSpacingAfter(right, multiplier: rhs.multiplier)
-                case .lessThanOrEqual: constraint = left.constraintLessThanOrEqualToSystemSpacingAfter(right, multiplier: rhs.multiplier)
-                case .greaterThanOrEqual: constraint = left.constraintGreaterThanOrEqualToSystemSpacingAfter(right, multiplier: rhs.multiplier)
+                case .equal: constraint = lhs.constraintEqualToSystemSpacingAfter(rhs, multiplier: rhs.multiplier)
+                case .lessThanOrEqual: constraint = lhs.constraintLessThanOrEqualToSystemSpacingAfter(rhs, multiplier: rhs.multiplier)
+                case .greaterThanOrEqual: constraint = lhs.constraintGreaterThanOrEqualToSystemSpacingAfter(rhs, multiplier: rhs.multiplier)
                 }
             } else {
                 switch relation {
-                case .equal: constraint = left.constraint(equalTo: right, constant: rhs.constant)
-                case .lessThanOrEqual: constraint = left.constraint(lessThanOrEqualTo: right, constant: rhs.constant)
-                case .greaterThanOrEqual: constraint = left.constraint(greaterThanOrEqualTo: right, constant: rhs.constant)
+                case .equal: constraint = lhs.constraint(equalTo: rhs, constant: rhs.constant)
+                case .lessThanOrEqual: constraint = lhs.constraint(lessThanOrEqualTo: rhs, constant: rhs.constant)
+                case .greaterThanOrEqual: constraint = lhs.constraint(greaterThanOrEqualTo: rhs, constant: rhs.constant)
                 }
             }
         #else
             switch relation {
-            case .equal: constraint = left.constraint(equalTo: right, constant: rhs.constant)
-            case .lessThanOrEqual: constraint = left.constraint(lessThanOrEqualTo: right, constant: rhs.constant)
-            case .greaterThanOrEqual: constraint = left.constraint(greaterThanOrEqualTo: right, constant: rhs.constant)
+            case .equal: constraint = lhs.constraint(equalTo: rhs, constant: rhs.constant)
+            case .lessThanOrEqual: constraint = lhs.constraint(lessThanOrEqualTo: rhs, constant: rhs.constant)
+            case .greaterThanOrEqual: constraint = lhs.constraint(greaterThanOrEqualTo: rhs, constant: rhs.constant)
             }
         #endif
-    } else if let left = lhs.anchor as? NSLayoutYAxisAnchor {
-        let right = rhs.anchor as! NSLayoutYAxisAnchor
+    } else if let lhs = lhs as? NSLayoutYAxisAnchor {
+        let rhs = rhs as! NSLayoutYAxisAnchor
         #if swift(>=3.2)
             if rhs.useSystemSpace, #available(iOS 11, *) {
                 switch relation {
-                case .equal: constraint = left.constraintEqualToSystemSpacingBelow(right, multiplier: rhs.multiplier)
-                case .lessThanOrEqual: constraint = left.constraintLessThanOrEqualToSystemSpacingBelow(right, multiplier: rhs.multiplier)
-                case .greaterThanOrEqual: constraint = left.constraintGreaterThanOrEqualToSystemSpacingBelow(right, multiplier: rhs.multiplier)
+                case .equal: constraint = lhs.constraintEqualToSystemSpacingBelow(rhs, multiplier: rhs.multiplier)
+                case .lessThanOrEqual: constraint = lhs.constraintLessThanOrEqualToSystemSpacingBelow(rhs, multiplier: rhs.multiplier)
+                case .greaterThanOrEqual: constraint = lhs.constraintGreaterThanOrEqualToSystemSpacingBelow(rhs, multiplier: rhs.multiplier)
                 }
             } else {
                 switch relation {
-                case .equal: constraint = left.constraint(equalTo: right, constant: rhs.constant)
-                case .lessThanOrEqual: constraint = left.constraint(lessThanOrEqualTo: right, constant: rhs.constant)
-                case .greaterThanOrEqual: constraint = left.constraint(greaterThanOrEqualTo: right, constant: rhs.constant)
+                case .equal: constraint = lhs.constraint(equalTo: rhs, constant: rhs.constant)
+                case .lessThanOrEqual: constraint = lhs.constraint(lessThanOrEqualTo: rhs, constant: rhs.constant)
+                case .greaterThanOrEqual: constraint = lhs.constraint(greaterThanOrEqualTo: rhs, constant: rhs.constant)
                 }
             }
         #else
             switch relation {
-            case .equal: constraint = left.constraint(equalTo: right, constant: rhs.constant)
-            case .lessThanOrEqual: constraint = left.constraint(lessThanOrEqualTo: right, constant: rhs.constant)
-            case .greaterThanOrEqual: constraint = left.constraint(greaterThanOrEqualTo: right, constant: rhs.constant)
+            case .equal: constraint = lhs.constraint(equalTo: rhs, constant: rhs.constant)
+            case .lessThanOrEqual: constraint = lhs.constraint(lessThanOrEqualTo: rhs, constant: rhs.constant)
+            case .greaterThanOrEqual: constraint = lhs.constraint(greaterThanOrEqualTo: rhs, constant: rhs.constant)
             }
         #endif
     } else {
         fatalError("maybe new anchor class?")
     }
-    constraint.priority = rhs.priority
+    constraint.priority = (rhs as! NSObject).priority
     
     if let context = Context.stack.last {
         context.constraints.append(constraint)
