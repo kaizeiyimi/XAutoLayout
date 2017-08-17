@@ -40,6 +40,14 @@ public func =/<A1, A2>(_ lhs: (A1, A2), _ rhs: (A1?, A2?)) -> [NSLayoutConstrain
 }
 
 @discardableResult
+public func =/<A1, A2>(_ lhs: (A1, A2), _ rhs: (A1, A2)) -> [NSLayoutConstraint]
+    where A1: Anchor, A2: Anchor {
+        return zip( toOptinalAnyArray(lhs.0, lhs.1), toOptinalAnyArray(rhs.0, rhs.1))
+            .filter{ $0.0 != nil && $0.1 != nil }
+            .map{ generate(lhs: $0.0!, relation: .equal, rhs: $0.1!) }
+}
+
+@discardableResult
 public func =/<A1, A2, A3>(_ lhs: (A1, A2, A3), _ rhs: (A1?, A2?, A3?)) -> [NSLayoutConstraint]
     where A1: Anchor, A2: Anchor, A3: Anchor {
         return zip( toOptinalAnyArray(lhs.0, lhs.1, lhs.2), toOptinalAnyArray(rhs.0, rhs.1, rhs.2))
@@ -48,7 +56,23 @@ public func =/<A1, A2, A3>(_ lhs: (A1, A2, A3), _ rhs: (A1?, A2?, A3?)) -> [NSLa
 }
 
 @discardableResult
+public func =/<A1, A2, A3>(_ lhs: (A1, A2, A3), _ rhs: (A1, A2, A3)) -> [NSLayoutConstraint]
+    where A1: Anchor, A2: Anchor, A3: Anchor {
+        return zip( toOptinalAnyArray(lhs.0, lhs.1, lhs.2), toOptinalAnyArray(rhs.0, rhs.1, rhs.2))
+            .filter{ $0.0 != nil && $0.1 != nil }
+            .map{ generate(lhs: $0.0!, relation: .equal, rhs: $0.1!) }
+}
+
+@discardableResult
 public func =/<A1, A2, A3, A4>(_ lhs: (A1, A2, A3, A4), _ rhs: (A1?, A2?, A3?, A4?)) -> [NSLayoutConstraint]
+    where A1: Anchor, A2: Anchor, A3: Anchor, A4: Anchor {
+        return zip( toOptinalAnyArray(lhs.0, lhs.1, lhs.2, lhs.3), toOptinalAnyArray(rhs.0, rhs.1, rhs.2, rhs.3))
+            .filter{ $0.0 != nil && $0.1 != nil }
+            .map{ generate(lhs: $0.0!, relation: .equal, rhs: $0.1!) }
+}
+
+@discardableResult
+public func =/<A1, A2, A3, A4>(_ lhs: (A1, A2, A3, A4), _ rhs: (A1, A2, A3, A4)) -> [NSLayoutConstraint]
     where A1: Anchor, A2: Anchor, A3: Anchor, A4: Anchor {
         return zip( toOptinalAnyArray(lhs.0, lhs.1, lhs.2, lhs.3), toOptinalAnyArray(rhs.0, rhs.1, rhs.2, rhs.3))
             .filter{ $0.0 != nil && $0.1 != nil }
