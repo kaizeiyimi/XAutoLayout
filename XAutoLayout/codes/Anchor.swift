@@ -61,23 +61,20 @@ extension NSLayoutDimension {
 }
 
 public final class Num: NSLayoutDimension {
-    
-    let value: CGFloat
-    
     #if swift(>=3.2)
     public init<T>(_ number: T) where T: Numeric {
-        value = CGFloat(("\(number)" as NSString).doubleValue)
         super.init()
+        constant = CGFloat(("\(number)" as NSString).doubleValue)
     }
     #else
     public init<T>(_ number: T) where T: SignedNumber {
-    value = CGFloat(("\(number)" as NSString).doubleValue)
-    super.init()
+        super.init()
+        constant = CGFloat(("\(number)" as NSString).doubleValue)
     }
     
     public init<T>(_ number: T) where T: UnsignedInteger {
-    value = CGFloat(("\(number)" as NSString).doubleValue)
-    super.init()
+        super.init()
+        constant = CGFloat(("\(number)" as NSString).doubleValue)
     }
     #endif
 }
@@ -99,7 +96,7 @@ extension NSLayoutDimension: Anchor {
 
 extension NSObject {
     private static var dictKey = "XAutoLayout.NSObject.AssociatedDict.Key"
-    public var __associatedDict__: [String: Any] {
+    var __associatedDict__: [String: Any] {
         get {
             if let dict = objc_getAssociatedObject(self, &NSObject.dictKey) as? [String: Any] {
                 return dict

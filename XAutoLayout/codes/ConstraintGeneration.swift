@@ -177,6 +177,9 @@ private func generate(lhs: Any, relation: NSLayoutRelation, rhs: Any) -> NSLayou
     }
     constraint.priority = (rhs as! NSObject).priority
     
+    (lhs as! NSObject).__associatedDict__ = [:]
+    (rhs as! NSObject).__associatedDict__ = [:]
+    
     if let context = Context.stack.last {
         context.constraints.append(constraint)
     } else {
