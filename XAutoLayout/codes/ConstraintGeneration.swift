@@ -111,7 +111,8 @@ private func generate(lhs: Any, relation: NSLayoutRelation, rhs: Any) -> NSLayou
     let constraint: NSLayoutConstraint
     
     if let lhs = lhs as? NSLayoutDimension {
-        if let rhs = rhs as? Num {
+        let rhs = rhs as! NSLayoutDimension
+        if rhs.isNumDimension {
             let constant = rhs.constant * rhs.multiplier
             switch relation {
             case .equal: constraint = lhs.constraint(equalToConstant: constant)
@@ -119,7 +120,6 @@ private func generate(lhs: Any, relation: NSLayoutRelation, rhs: Any) -> NSLayou
             case .greaterThanOrEqual: constraint = lhs.constraint(greaterThanOrEqualToConstant: constant)
             }
         } else {
-            let rhs = rhs as! NSLayoutDimension
             switch relation {
             case .equal: constraint = lhs.constraint(equalTo: rhs, multiplier: rhs.multiplier, constant: rhs.constant)
             case .lessThanOrEqual: constraint = lhs.constraint(lessThanOrEqualTo: rhs, multiplier: rhs.multiplier, constant: rhs.constant)

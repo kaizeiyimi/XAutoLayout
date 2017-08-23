@@ -60,24 +60,52 @@ extension NSLayoutDimension {
     }
 }
 
-public final class Num: NSLayoutDimension {
-    #if swift(>=3.2)
-    public init<T>(_ number: T) where T: Numeric {
-        super.init()
-        constant = CGFloat(("\(number)" as NSString).doubleValue)
+// NOTICE: iOS9 says '[NSLayoutAnchor init] doesn't work yet.'
+// so to support iOS9 I have to do so...
+
+#if swift(>=3.2)
+    public func Num<T>(_ number: T) -> NSLayoutDimension where T: Numeric {
+        let anchor = UIView().widthAnchor
+        anchor.isNumDimension = true
+        anchor.constant = CGFloat(("\(number)" as NSString).doubleValue)
+        return anchor
     }
-    #else
-    public init<T>(_ number: T) where T: SignedNumber {
-        super.init()
-        constant = CGFloat(("\(number)" as NSString).doubleValue)
+#else
+    public func Num<T>(_ number: T) -> NSLayoutDimension where T: SignedNumber {
+        let anchor = UIView().widthAnchor
+        anchor.isNumDimension = true
+        anchor.constant = CGFloat(("\(number)" as NSString).doubleValue)
+        return anchor
     }
     
-    public init<T>(_ number: T) where T: UnsignedInteger {
-        super.init()
-        constant = CGFloat(("\(number)" as NSString).doubleValue)
+    public func Num<T>(_ number: T) -> NSLayoutDimension where T: UnsignedInteger {
+        let anchor = UIView().widthAnchor
+        anchor.isNumDimension = true
+        anchor.constant = CGFloat(("\(number)" as NSString).doubleValue)
+        return anchor
     }
-    #endif
-}
+#endif
+
+// NOTICE: when iOS9 can be dropped, will switch to these impl.
+
+//public final class Num: NSLayoutDimension {
+//    #if swift(>=3.2)
+//    public init<T>(_ number: T) where T: Numeric {
+//        super.init()
+//        constant = CGFloat(("\(number)" as NSString).doubleValue)
+//    }
+//    #else
+//    public init<T>(_ number: T) where T: SignedNumber {
+//        super.init()
+//        constant = CGFloat(("\(number)" as NSString).doubleValue)
+//    }
+//
+//    public init<T>(_ number: T) where T: UnsignedInteger {
+//        super.init()
+//        constant = CGFloat(("\(number)" as NSString).doubleValue)
+//    }
+//    #endif
+//}
 
 extension NSLayoutXAxisAnchor: Anchor {
     public typealias AnchorType = NSLayoutXAxisAnchor
@@ -132,5 +160,10 @@ extension NSObject {
     var useSystemSpace: Bool {
         get { return __associatedDict__["useSystemSpace"] as? Bool ?? false }
         set { __associatedDict__["useSystemSpace"] = newValue }
+    }
+    
+    var isNumDimension: Bool {
+        get { return __associatedDict__["isNumDimension"] as? Bool ?? false }
+        set { __associatedDict__["isNumDimension"] = newValue }
     }
 }
