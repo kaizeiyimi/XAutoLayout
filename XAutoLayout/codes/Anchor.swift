@@ -28,35 +28,59 @@ public protocol Anchor: class {
 // MARK: - NSLayoutAnchor extension workaround
 extension Anchor where Self: NSObject {
     public func c(_ constant: CGFloat) -> Self {
-        self.constant = constant
-        return self
+        let anchor = makeAnchorContainer()
+        anchor.constant = constant
+        return anchor
     }
     
     public func p(_ priority: UILayoutPriority) -> Self {
-        self.priority = priority
-        return self
+        let anchor = makeAnchorContainer()
+        anchor.priority = priority
+        return anchor
     }
     
     #if swift(>=4.0)
     public func p(_ priority: Float) -> Self {
-        self.priority = UILayoutPriority(rawValue: priority)
-        return self
+        let anchor = makeAnchorContainer()
+        anchor.priority = UILayoutPriority(rawValue: priority)
+        return anchor
     }
     #endif
     
     #if swift(>=3.2)
     @available(iOS 11, *)
     public func useSystemSpace(m: CGFloat) -> Self {
-        (self.multiplier, self.useSystemSpace) = (m, true)
-        return self
+        let anchor = makeAnchorContainer()
+        (anchor.multiplier, anchor.useSystemSpace) = (m, true)
+        return anchor
     }
     #endif
+    
+    fileprivate func makeAnchorContainer() -> Self {
+        if let _ = origin {
+            return self
+        } else {
+            let anchor: Self = {
+                switch self {
+                case is NSLayoutXAxisAnchor: return UIView().leadingAnchor as! Self
+                case is NSLayoutYAxisAnchor: return UIView().topAnchor as! Self
+                case is NSLayoutDimension: return UIView().widthAnchor as! Self
+                    
+                default:
+                    fatalError("maybe new anchor class?")
+                }
+            }()
+            anchor.origin = self
+            return anchor
+        }
+    }
 }
 
 extension NSLayoutDimension {
     public func m(_ multiplier: CGFloat) -> Self {
-        self.multiplier = multiplier
-        return self
+        let anchor = makeAnchorContainer()
+        anchor.multiplier = multiplier
+        return anchor
     }
 }
 
@@ -161,6 +185,13 @@ extension NSObject {
         get { return __associatedDict__["useSystemSpace"] as? Bool ?? false }
         set { __associatedDict__["useSystemSpace"] = newValue }
     }
+    
+    //
+    var origin: Any? {
+        get { return __associatedDict__["origin"] }
+        set { __associatedDict__["origin"] = newValue }
+    }
+    
     
     var isNumDimension: Bool {
         get { return __associatedDict__["isNumDimension"] as? Bool ?? false }
