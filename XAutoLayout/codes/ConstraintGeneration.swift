@@ -132,52 +132,36 @@ private func generate(lhs: Any, relation: NSLayoutRelation, rhs: Any) -> NSLayou
         let rhs = rhs as! NSLayoutXAxisAnchor
         let lItem = (lhs.origin ?? lhs) as! NSLayoutXAxisAnchor
         let rItem = (rhs.origin ?? rhs) as! NSLayoutXAxisAnchor
-        #if swift(>=3.2)
-            if rhs.useSystemSpace, #available(iOS 11, *) {
-                switch relation {
-                case .equal: constraint = lItem.constraintEqualToSystemSpacingAfter(rItem, multiplier: rhs.multiplier)
-                case .lessThanOrEqual: constraint = lItem.constraintLessThanOrEqualToSystemSpacingAfter(rItem, multiplier: rhs.multiplier)
-                case .greaterThanOrEqual: constraint = lItem.constraintGreaterThanOrEqualToSystemSpacingAfter(rItem, multiplier: rhs.multiplier)
-                }
-            } else {
-                switch relation {
-                case .equal: constraint = lItem.constraint(equalTo: rItem, constant: rhs.constant)
-                case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualTo: rItem, constant: rhs.constant)
-                case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualTo: rItem, constant: rhs.constant)
-                }
+        if rhs.useSystemSpace, #available(iOS 11, *) {
+            switch relation {
+            case .equal: constraint = lItem.constraintEqualToSystemSpacingAfter(rItem, multiplier: rhs.multiplier)
+            case .lessThanOrEqual: constraint = lItem.constraintLessThanOrEqualToSystemSpacingAfter(rItem, multiplier: rhs.multiplier)
+            case .greaterThanOrEqual: constraint = lItem.constraintGreaterThanOrEqualToSystemSpacingAfter(rItem, multiplier: rhs.multiplier)
             }
-        #else
+        } else {
             switch relation {
             case .equal: constraint = lItem.constraint(equalTo: rItem, constant: rhs.constant)
             case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualTo: rItem, constant: rhs.constant)
             case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualTo: rItem, constant: rhs.constant)
             }
-        #endif
+        }
     } else if let lhs = lhs as? NSLayoutYAxisAnchor {
         let rhs = rhs as! NSLayoutYAxisAnchor
         let lItem = (lhs.origin ?? lhs) as! NSLayoutYAxisAnchor
         let rItem = (rhs.origin ?? rhs) as! NSLayoutYAxisAnchor
-        #if swift(>=3.2)
-            if rhs.useSystemSpace, #available(iOS 11, *) {
-                switch relation {
-                case .equal: constraint = lItem.constraintEqualToSystemSpacingBelow(rItem, multiplier: rhs.multiplier)
-                case .lessThanOrEqual: constraint = lItem.constraintLessThanOrEqualToSystemSpacingBelow(rItem, multiplier: rhs.multiplier)
-                case .greaterThanOrEqual: constraint = lItem.constraintGreaterThanOrEqualToSystemSpacingBelow(rItem, multiplier: rhs.multiplier)
-                }
-            } else {
-                switch relation {
-                case .equal: constraint = lItem.constraint(equalTo: rItem, constant: rhs.constant)
-                case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualTo: rItem, constant: rhs.constant)
-                case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualTo: rItem, constant: rhs.constant)
-                }
+        if rhs.useSystemSpace, #available(iOS 11, *) {
+            switch relation {
+            case .equal: constraint = lItem.constraintEqualToSystemSpacingBelow(rItem, multiplier: rhs.multiplier)
+            case .lessThanOrEqual: constraint = lItem.constraintLessThanOrEqualToSystemSpacingBelow(rItem, multiplier: rhs.multiplier)
+            case .greaterThanOrEqual: constraint = lItem.constraintGreaterThanOrEqualToSystemSpacingBelow(rItem, multiplier: rhs.multiplier)
             }
-        #else
+        } else {
             switch relation {
             case .equal: constraint = lItem.constraint(equalTo: rItem, constant: rhs.constant)
             case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualTo: rItem, constant: rhs.constant)
             case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualTo: rItem, constant: rhs.constant)
             }
-        #endif
+        }
     } else {
         fatalError("maybe new anchor class?")
     }
@@ -191,3 +175,4 @@ private func generate(lhs: Any, relation: NSLayoutRelation, rhs: Any) -> NSLayou
     
     return constraint
 }
+

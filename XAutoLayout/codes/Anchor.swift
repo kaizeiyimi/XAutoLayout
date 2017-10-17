@@ -38,23 +38,19 @@ extension Anchor where Self: NSObject {
         anchor.priority = priority
         return anchor
     }
-    
-    #if swift(>=4.0)
+
     public func p(_ priority: Float) -> Self {
         let anchor = makeAnchorContainer()
-        anchor.priority = UILayoutPriority(rawValue: priority)
+        anchor.priority = UILayoutPriority(priority)
         return anchor
     }
-    #endif
     
-    #if swift(>=3.2)
     @available(iOS 11, *)
     public func useSystemSpace(m: CGFloat) -> Self {
         let anchor = makeAnchorContainer()
         (anchor.multiplier, anchor.useSystemSpace) = (m, true)
         return anchor
     }
-    #endif
     
     fileprivate func makeAnchorContainer() -> Self {
         if let _ = origin {
@@ -87,28 +83,12 @@ extension NSLayoutDimension {
 // NOTICE: iOS9 says '[NSLayoutAnchor init] doesn't work yet.'
 // so to support iOS9 I have to do so...
 
-#if swift(>=3.2)
-    public func Num<T>(_ number: T) -> NSLayoutDimension where T: Numeric {
-        let anchor = UIView().widthAnchor
-        anchor.isNumDimension = true
-        anchor.constant = CGFloat(("\(number)" as NSString).doubleValue)
-        return anchor
-    }
-#else
-    public func Num<T>(_ number: T) -> NSLayoutDimension where T: SignedNumber {
-        let anchor = UIView().widthAnchor
-        anchor.isNumDimension = true
-        anchor.constant = CGFloat(("\(number)" as NSString).doubleValue)
-        return anchor
-    }
-    
-    public func Num<T>(_ number: T) -> NSLayoutDimension where T: UnsignedInteger {
-        let anchor = UIView().widthAnchor
-        anchor.isNumDimension = true
-        anchor.constant = CGFloat(("\(number)" as NSString).doubleValue)
-        return anchor
-    }
-#endif
+public func Num<T>(_ number: T) -> NSLayoutDimension where T: Numeric {
+    let anchor = UIView().widthAnchor
+    anchor.isNumDimension = true
+    anchor.constant = CGFloat(("\(number)" as NSString).doubleValue)
+    return anchor
+}
 
 // NOTICE: when iOS9 can be dropped, will switch to these impl.
 
@@ -171,13 +151,7 @@ extension NSObject {
     }
     
     var priority: UILayoutPriority {
-        get {
-            #if swift(>=4.0)
-                return __associatedDict__["priority"] as? UILayoutPriority ?? .required
-            #else
-                return __associatedDict__["priority"] as? UILayoutPriority ?? UILayoutPriorityRequired
-            #endif
-        }
+        get { return __associatedDict__["priority"] as? UILayoutPriority ?? .required }
         set { __associatedDict__["priority"] = newValue }
     }
     
@@ -198,3 +172,4 @@ extension NSObject {
         set { __associatedDict__["isNumDimension"] = newValue }
     }
 }
+
