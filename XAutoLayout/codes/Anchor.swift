@@ -29,26 +29,26 @@ public protocol Anchor: class {
 extension Anchor where Self: NSObject {
     public func c(_ constant: CGFloat) -> Self {
         let anchor = makeAnchorContainer()
-        anchor.constant = constant
+        anchor.xConstant = constant
         return anchor
     }
     
     public func p(_ priority: UILayoutPriority) -> Self {
         let anchor = makeAnchorContainer()
-        anchor.priority = priority
+        anchor.xPriority = priority
         return anchor
     }
 
     public func p(_ priority: Float) -> Self {
         let anchor = makeAnchorContainer()
-        anchor.priority = UILayoutPriority(priority)
+        anchor.xPriority = UILayoutPriority(priority)
         return anchor
     }
     
     @available(iOS 11, *)
     public func useSystemSpace(m: CGFloat) -> Self {
         let anchor = makeAnchorContainer()
-        (anchor.multiplier, anchor.useSystemSpace) = (m, true)
+        (anchor.xMultiplier, anchor.useSystemSpace) = (m, true)
         return anchor
     }
     
@@ -75,7 +75,7 @@ extension Anchor where Self: NSObject {
 extension NSLayoutDimension {
     public func m(_ multiplier: CGFloat) -> Self {
         let anchor = makeAnchorContainer()
-        anchor.multiplier = multiplier
+        anchor.xMultiplier = multiplier
         return anchor
     }
 }
@@ -86,7 +86,7 @@ extension NSLayoutDimension {
 public func Num<T>(_ number: T) -> NSLayoutDimension where T: Numeric {
     let anchor = UIView().widthAnchor
     anchor.isNumDimension = true
-    anchor.constant = CGFloat(("\(number)" as NSString).doubleValue)
+    anchor.xConstant = CGFloat(("\(number)" as NSString).doubleValue)
     return anchor
 }
 
@@ -140,17 +140,17 @@ extension NSObject {
         }
     }
     
-    var constant: CGFloat {
+    var xConstant: CGFloat {
         get { return __associatedDict__["constant"] as? CGFloat ?? 0 }
         set { __associatedDict__["constant"] = newValue }
     }
     
-    var multiplier: CGFloat {
+    var xMultiplier: CGFloat {
         get { return __associatedDict__["multiplier"] as? CGFloat ?? 1 }
         set { __associatedDict__["multiplier"] = newValue }
     }
     
-    var priority: UILayoutPriority {
+    var xPriority: UILayoutPriority {
         get { return __associatedDict__["priority"] as? UILayoutPriority ?? .required }
         set { __associatedDict__["priority"] = newValue }
     }
