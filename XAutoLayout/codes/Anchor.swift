@@ -61,12 +61,12 @@ extension Anchor where Self: NSObject {
                 case is NSLayoutXAxisAnchor: return UIView().leadingAnchor as! Self
                 case is NSLayoutYAxisAnchor: return UIView().topAnchor as! Self
                 case is NSLayoutDimension: return UIView().widthAnchor as! Self
-                    
                 default:
                     fatalError("maybe new anchor class?")
                 }
             }()
             anchor.origin = self
+            anchor.isNumDimension = isNumDimension
             return anchor
         }
     }
