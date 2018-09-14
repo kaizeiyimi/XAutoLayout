@@ -107,7 +107,7 @@ private final class Context {
     }
 }
 
-private func generate(lhs: Any, relation: NSLayoutRelation, rhs: Any) -> NSLayoutConstraint {
+private func generate(lhs: Any, relation: NSLayoutConstraint.Relation, rhs: Any) -> NSLayoutConstraint {
     let constraint: NSLayoutConstraint
     
     if let lhs = lhs as? NSLayoutDimension {
@@ -134,9 +134,9 @@ private func generate(lhs: Any, relation: NSLayoutRelation, rhs: Any) -> NSLayou
         let rItem = (rhs.origin ?? rhs) as! NSLayoutXAxisAnchor
         if rhs.useSystemSpace, #available(iOS 11, *) {
             switch relation {
-            case .equal: constraint = lItem.constraintEqualToSystemSpacingAfter(rItem, multiplier: rhs.xMultiplier)
-            case .lessThanOrEqual: constraint = lItem.constraintLessThanOrEqualToSystemSpacingAfter(rItem, multiplier: rhs.xMultiplier)
-            case .greaterThanOrEqual: constraint = lItem.constraintGreaterThanOrEqualToSystemSpacingAfter(rItem, multiplier: rhs.xMultiplier)
+            case .equal: constraint = lItem.constraint(equalToSystemSpacingAfter: rItem, multiplier: rhs.xMultiplier)
+            case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualToSystemSpacingAfter: rItem, multiplier: rhs.xMultiplier)
+            case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualToSystemSpacingAfter: rItem, multiplier: rhs.xMultiplier)
             }
         } else {
             switch relation {
@@ -151,9 +151,9 @@ private func generate(lhs: Any, relation: NSLayoutRelation, rhs: Any) -> NSLayou
         let rItem = (rhs.origin ?? rhs) as! NSLayoutYAxisAnchor
         if rhs.useSystemSpace, #available(iOS 11, *) {
             switch relation {
-            case .equal: constraint = lItem.constraintEqualToSystemSpacingBelow(rItem, multiplier: rhs.xMultiplier)
-            case .lessThanOrEqual: constraint = lItem.constraintLessThanOrEqualToSystemSpacingBelow(rItem, multiplier: rhs.xMultiplier)
-            case .greaterThanOrEqual: constraint = lItem.constraintGreaterThanOrEqualToSystemSpacingBelow(rItem, multiplier: rhs.xMultiplier)
+            case .equal: constraint = lItem.constraint(equalToSystemSpacingBelow: rItem, multiplier: rhs.xMultiplier)
+            case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualToSystemSpacingBelow: rItem, multiplier: rhs.xMultiplier)
+            case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualToSystemSpacingBelow: rItem, multiplier: rhs.xMultiplier)
             }
         } else {
             switch relation {
