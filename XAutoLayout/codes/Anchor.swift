@@ -66,7 +66,10 @@ extension Anchor where Self: NSObject {
                 }
             }()
             anchor.origin = self
-            anchor.isNumDimension = isNumDimension
+            anchor.isNumDimension = self.isNumDimension
+            if self.isNumDimension {
+                anchor.xConstant = self.xConstant
+            }
             return anchor
         }
     }
