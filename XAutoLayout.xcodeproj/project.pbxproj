@@ -21,6 +21,7 @@
 		F6A642991BCA074D00A670E9 /* Anchor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Anchor.swift; sourceTree = "<group>"; };
 		F6ABAF311F35A7FC003968AF /* UIKit+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIKit+Extension.swift"; sourceTree = "<group>"; };
 		F6D287831F2091DD00C23DED /* ConstraintGeneration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstraintGeneration.swift; sourceTree = "<group>"; };
+		F6F33345225DAD8800E5CF1F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		F6FC6DD41C3E64BC00FF8DB4 /* XAutoLayout.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = XAutoLayout.podspec; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -38,6 +39,7 @@
 		F6A642801BCA06F300A670E9 = {
 			isa = PBXGroup;
 			children = (
+				F6F33345225DAD8800E5CF1F /* README.md */,
 				F6A6428C1BCA06F300A670E9 /* XAutoLayout */,
 				F6A6428B1BCA06F300A670E9 /* Products */,
 			);
@@ -110,21 +112,22 @@
 		F6A642811BCA06F300A670E9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = kaizei.yimi;
 				TargetAttributes = {
 					F6A642891BCA06F300A670E9 = {
 						CreatedOnToolsVersion = 7.0;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
 			buildConfigurationList = F6A642841BCA06F300A670E9 /* Build configuration list for PBXProject "XAutoLayout" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = F6A642801BCA06F300A670E9;
 			productRefGroup = F6A6428B1BCA06F300A670E9 /* Products */;
@@ -165,6 +168,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -224,6 +228,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -288,6 +293,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = kaizei.yimi.XAutoLayout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -306,6 +312,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = kaizei.yimi.XAutoLayout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

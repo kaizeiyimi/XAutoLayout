@@ -2,14 +2,14 @@
 
 uses some swift amazing feature, provides a very short and clear way to make constraints in code.  
 
-### XCode 9 and swift 4
+### XCode 10.2 and swift 5
 
-since swift 4 is reqiured, you need XCode 9 and above.
+3.2 updated to swift5.
 
 
 ### Latest version
 
-current latest version is **3.0**.
+current latest version is **3.2**.
 
 ### Quick look
 
