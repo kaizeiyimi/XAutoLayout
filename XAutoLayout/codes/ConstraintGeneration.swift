@@ -120,12 +120,16 @@ private func generate(lhs: Any, relation: NSLayoutConstraint.Relation, rhs: Any)
             case .equal: constraint = lItem.constraint(equalToConstant: constant)
             case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualToConstant: constant)
             case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualToConstant: constant)
+            @unknown default:
+                fatalError("non supported constraint relation")
             }
         } else {
             switch relation {
             case .equal: constraint = lItem.constraint(equalTo: rItem, multiplier: rhs.xMultiplier, constant: rhs.xConstant)
             case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualTo: rItem, multiplier: rhs.xMultiplier, constant: rhs.xConstant)
             case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualTo: rItem, multiplier: rhs.xMultiplier, constant: rhs.xConstant)
+            @unknown default:
+                fatalError("non supported constraint relation")
             }
         }
     } else if let lhs = lhs as? NSLayoutXAxisAnchor {
@@ -137,12 +141,16 @@ private func generate(lhs: Any, relation: NSLayoutConstraint.Relation, rhs: Any)
             case .equal: constraint = lItem.constraint(equalToSystemSpacingAfter: rItem, multiplier: rhs.xMultiplier)
             case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualToSystemSpacingAfter: rItem, multiplier: rhs.xMultiplier)
             case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualToSystemSpacingAfter: rItem, multiplier: rhs.xMultiplier)
+            @unknown default:
+                fatalError("non supported constraint relation")
             }
         } else {
             switch relation {
             case .equal: constraint = lItem.constraint(equalTo: rItem, constant: rhs.xConstant)
             case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualTo: rItem, constant: rhs.xConstant)
             case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualTo: rItem, constant: rhs.xConstant)
+            @unknown default:
+                fatalError("non supported constraint relation")
             }
         }
     } else if let lhs = lhs as? NSLayoutYAxisAnchor {
@@ -154,12 +162,16 @@ private func generate(lhs: Any, relation: NSLayoutConstraint.Relation, rhs: Any)
             case .equal: constraint = lItem.constraint(equalToSystemSpacingBelow: rItem, multiplier: rhs.xMultiplier)
             case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualToSystemSpacingBelow: rItem, multiplier: rhs.xMultiplier)
             case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualToSystemSpacingBelow: rItem, multiplier: rhs.xMultiplier)
+            @unknown default:
+                fatalError("non supported constraint relation")
             }
         } else {
             switch relation {
             case .equal: constraint = lItem.constraint(equalTo: rItem, constant: rhs.xConstant)
             case .lessThanOrEqual: constraint = lItem.constraint(lessThanOrEqualTo: rItem, constant: rhs.xConstant)
             case .greaterThanOrEqual: constraint = lItem.constraint(greaterThanOrEqualTo: rItem, constant: rhs.xConstant)
+            @unknown default:
+                fatalError("non supported constraint relation")
             }
         }
     } else {
