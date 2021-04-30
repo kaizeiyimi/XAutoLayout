@@ -20,7 +20,7 @@ import UIKit
 public final class __Placeholder__ {}
 
 // MARK: - Anchor
-public protocol Anchor: class {
+public protocol Anchor: AnyObject {
     associatedtype AnchorType: AnyObject
     func __placeholder__() -> __Placeholder__
 }
