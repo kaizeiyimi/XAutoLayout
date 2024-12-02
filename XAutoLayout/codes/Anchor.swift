@@ -17,10 +17,10 @@ import UIKit
 
 
 /// just a guard to protect Anchor protocol.
-public final class __Placeholder__ {}
+@MainActor public final class __Placeholder__ {}
 
 // MARK: - Anchor
-public protocol Anchor: AnyObject {
+@MainActor public protocol Anchor: AnyObject {
     associatedtype AnchorType: AnyObject
     func __placeholder__() -> __Placeholder__
 }
@@ -86,7 +86,7 @@ extension NSLayoutDimension {
 // NOTICE: iOS9 says '[NSLayoutAnchor init] doesn't work yet.'
 // so to support iOS9 I have to do so...
 
-public func Num<T>(_ number: T) -> NSLayoutDimension where T: Numeric {
+@MainActor public func Num<T>(_ number: T) -> NSLayoutDimension where T: Numeric {
     let anchor = UIView().widthAnchor
     anchor.isNumDimension = true
     anchor.xConstant = CGFloat(("\(number)" as NSString).doubleValue)
@@ -129,8 +129,8 @@ extension NSLayoutDimension: Anchor {
     public func __placeholder__() -> __Placeholder__ { return __Placeholder__() }
 }
 
-extension NSObject {
-    private static var dictKey = "XAutoLayout.NSObject.AssociatedDict.Key"
+@MainActor extension NSObject {
+    private static var dictKey: Void?
     var __associatedDict__: [String: Any] {
         get {
             if let dict = objc_getAssociatedObject(self, &NSObject.dictKey) as? [String: Any] {

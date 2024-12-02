@@ -15,24 +15,24 @@ infix operator >=/
 // MARK: - single
 
 @discardableResult
-public func =/<A>(_ lhs: A, _ rhs: A) -> NSLayoutConstraint where A: Anchor {
+@MainActor public func =/<A>(_ lhs: A, _ rhs: A) -> NSLayoutConstraint where A: Anchor {
     return generate(lhs: lhs, relation: .equal, rhs: rhs)
 }
 
 @discardableResult
-public func <=/<A>(_ lhs: A, _ rhs: A) -> NSLayoutConstraint where A: Anchor {
+@MainActor public func <=/<A>(_ lhs: A, _ rhs: A) -> NSLayoutConstraint where A: Anchor {
     return generate(lhs: lhs, relation: .lessThanOrEqual, rhs: rhs)
 }
 
 @discardableResult
-public func >=/<A>(_ lhs: A, _ rhs: A) -> NSLayoutConstraint where A: Anchor {
+@MainActor public func >=/<A>(_ lhs: A, _ rhs: A) -> NSLayoutConstraint where A: Anchor {
     return generate(lhs: lhs, relation: .greaterThanOrEqual, rhs: rhs)
 }
 
 // MARK: - group
 
 @discardableResult
-public func =/<A1, A2>(_ lhs: (A1, A2), _ rhs: (A1?, A2?)) -> [NSLayoutConstraint]
+@MainActor public func =/<A1, A2>(_ lhs: (A1, A2), _ rhs: (A1?, A2?)) -> [NSLayoutConstraint]
     where A1: Anchor, A2: Anchor {
         return zip( toOptinalAnyArray(lhs.0, lhs.1), toOptinalAnyArray(rhs.0, rhs.1))
             .filter{ $0.0 != nil && $0.1 != nil }
@@ -40,7 +40,7 @@ public func =/<A1, A2>(_ lhs: (A1, A2), _ rhs: (A1?, A2?)) -> [NSLayoutConstrain
 }
 
 @discardableResult
-public func =/<A1, A2>(_ lhs: (A1, A2), _ rhs: (A1, A2)) -> [NSLayoutConstraint]
+@MainActor public func =/<A1, A2>(_ lhs: (A1, A2), _ rhs: (A1, A2)) -> [NSLayoutConstraint]
     where A1: Anchor, A2: Anchor {
         return zip( toOptinalAnyArray(lhs.0, lhs.1), toOptinalAnyArray(rhs.0, rhs.1))
             .filter{ $0.0 != nil && $0.1 != nil }
@@ -48,7 +48,7 @@ public func =/<A1, A2>(_ lhs: (A1, A2), _ rhs: (A1, A2)) -> [NSLayoutConstraint]
 }
 
 @discardableResult
-public func =/<A1, A2, A3>(_ lhs: (A1, A2, A3), _ rhs: (A1?, A2?, A3?)) -> [NSLayoutConstraint]
+@MainActor public func =/<A1, A2, A3>(_ lhs: (A1, A2, A3), _ rhs: (A1?, A2?, A3?)) -> [NSLayoutConstraint]
     where A1: Anchor, A2: Anchor, A3: Anchor {
         return zip( toOptinalAnyArray(lhs.0, lhs.1, lhs.2), toOptinalAnyArray(rhs.0, rhs.1, rhs.2))
             .filter{ $0.0 != nil && $0.1 != nil }
@@ -56,7 +56,7 @@ public func =/<A1, A2, A3>(_ lhs: (A1, A2, A3), _ rhs: (A1?, A2?, A3?)) -> [NSLa
 }
 
 @discardableResult
-public func =/<A1, A2, A3>(_ lhs: (A1, A2, A3), _ rhs: (A1, A2, A3)) -> [NSLayoutConstraint]
+@MainActor public func =/<A1, A2, A3>(_ lhs: (A1, A2, A3), _ rhs: (A1, A2, A3)) -> [NSLayoutConstraint]
     where A1: Anchor, A2: Anchor, A3: Anchor {
         return zip( toOptinalAnyArray(lhs.0, lhs.1, lhs.2), toOptinalAnyArray(rhs.0, rhs.1, rhs.2))
             .filter{ $0.0 != nil && $0.1 != nil }
@@ -64,7 +64,7 @@ public func =/<A1, A2, A3>(_ lhs: (A1, A2, A3), _ rhs: (A1, A2, A3)) -> [NSLayou
 }
 
 @discardableResult
-public func =/<A1, A2, A3, A4>(_ lhs: (A1, A2, A3, A4), _ rhs: (A1?, A2?, A3?, A4?)) -> [NSLayoutConstraint]
+@MainActor public func =/<A1, A2, A3, A4>(_ lhs: (A1, A2, A3, A4), _ rhs: (A1?, A2?, A3?, A4?)) -> [NSLayoutConstraint]
     where A1: Anchor, A2: Anchor, A3: Anchor, A4: Anchor {
         return zip( toOptinalAnyArray(lhs.0, lhs.1, lhs.2, lhs.3), toOptinalAnyArray(rhs.0, rhs.1, rhs.2, rhs.3))
             .filter{ $0.0 != nil && $0.1 != nil }
@@ -72,20 +72,20 @@ public func =/<A1, A2, A3, A4>(_ lhs: (A1, A2, A3, A4), _ rhs: (A1?, A2?, A3?, A
 }
 
 @discardableResult
-public func =/<A1, A2, A3, A4>(_ lhs: (A1, A2, A3, A4), _ rhs: (A1, A2, A3, A4)) -> [NSLayoutConstraint]
+@MainActor public func =/<A1, A2, A3, A4>(_ lhs: (A1, A2, A3, A4), _ rhs: (A1, A2, A3, A4)) -> [NSLayoutConstraint]
     where A1: Anchor, A2: Anchor, A3: Anchor, A4: Anchor {
         return zip( toOptinalAnyArray(lhs.0, lhs.1, lhs.2, lhs.3), toOptinalAnyArray(rhs.0, rhs.1, rhs.2, rhs.3))
             .filter{ $0.0 != nil && $0.1 != nil }
             .map{ generate(lhs: $0.0!, relation: .equal, rhs: $0.1!) }
 }
 
-private func toOptinalAnyArray(_ values: Any?...) -> [Any?] {
+@MainActor private func toOptinalAnyArray(_ values: Any?...) -> [Any?] {
     return values
 }
 
 // MARK: - container
 
-@discardableResult
+@MainActor @discardableResult
 public func xmakeConstraints(autoActive: Bool = true, _ construction: () -> Void) -> [NSLayoutConstraint] {
     Context.stack.append(Context(autoActive: autoActive))
     construction()
@@ -96,7 +96,7 @@ public func xmakeConstraints(autoActive: Bool = true, _ construction: () -> Void
     return constraints
 }
 
-private final class Context {
+@MainActor private final class Context {
     let autoActive: Bool
     var constraints: [NSLayoutConstraint] = []
     
@@ -107,7 +107,7 @@ private final class Context {
     }
 }
 
-private func generate(lhs: Any, relation: NSLayoutConstraint.Relation, rhs: Any) -> NSLayoutConstraint {
+@MainActor private func generate(lhs: Any, relation: NSLayoutConstraint.Relation, rhs: Any) -> NSLayoutConstraint {
     let constraint: NSLayoutConstraint
     
     if let lhs = lhs as? NSLayoutDimension {
